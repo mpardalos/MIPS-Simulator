@@ -12,3 +12,9 @@ Clean everything:
 ```
 make clean
 ```
+
+## Dependencies
+
+* https://github.com/mapbox/variant
+
+Everything in `src/include` is an external dependency.
