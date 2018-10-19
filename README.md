@@ -17,4 +17,4 @@ make clean
 
 * https://github.com/mapbox/variant
 
-Everything in `src/include` is an external dependency.
+Everything in `include/` is an external dependency.
