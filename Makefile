@@ -2,9 +2,9 @@ CXX=clang++
 
 ARTIFACTNAME=out
 DIST=dist
-CPPFLAGS=-I src/include/
+CPPFLAGS=-I include/ -Wall
 
-objects=src/main.o src/decoder.o
+objects=src/main.o src/decoder.o src/runtime.o
 
 build: $(objects)
 	mkdir -p $(DIST)
