@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 
-#include "include/mapbox/variant.hpp"
+#include "mapbox/variant.hpp"
 
 #include "opcodes.hpp"
 
