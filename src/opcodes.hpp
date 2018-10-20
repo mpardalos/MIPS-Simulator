@@ -1,8 +1,8 @@
-#include "include/mapbox/variant.hpp"
+#ifndef OPCODES_HPP
+#define OPCODES_HPP
 
-typedef unsigned short Register;
-typedef int Address;
-
+#include "mapbox/variant.hpp"
+#include "typedefs.hpp"
 
 enum class ROpCode { 
     SPECIAL // This opcode is always 0
@@ -51,7 +51,7 @@ enum class IOpCode {
     ADDIU,   //   Add immediate unsigned (no overflow) [..] 0b001001 or 9
 
 };
-
+typedef
 enum class OpFunction {
     // Jumps
     JALR,    //   Jump and link register
@@ -98,9 +98,9 @@ enum class SpecialOpCode {
 
 struct R_Instruction {
     ROpCode opcode;
-    Register dest;
-    Register src1; 
-    Register src2; 
+    RegisterId dest;
+    RegisterId src1; 
+    RegisterId src2; 
     unsigned short int shift;
     OpFunction function;
 };
@@ -108,8 +108,8 @@ struct R_Instruction {
 struct I_Instruction {
     IOpCode opcode;
 
-    Register src;
-    Register dest;
+    RegisterId src;
+    RegisterId dest;
 
     int immediate;
 };
@@ -120,3 +120,4 @@ struct J_Instruction {
 };
 
 typedef mapbox::util::variant<R_Instruction, I_Instruction, J_Instruction> Instruction;
+#endif
