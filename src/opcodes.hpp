@@ -51,7 +51,7 @@ enum class IOpCode {
     ADDIU,   //   Add immediate unsigned (no overflow) [..] 0b001001 or 9
 
 };
-typedef
+
 enum class OpFunction {
     // Jumps
     JALR,    //   Jump and link register
@@ -120,4 +120,5 @@ struct J_Instruction {
 };
 
 typedef mapbox::util::variant<R_Instruction, I_Instruction, J_Instruction> Instruction;
+
 #endif
