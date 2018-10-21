@@ -11,9 +11,9 @@ unsigned short int get_opcode(unsigned int word) { return word >> 26; }
 R_Instruction decode_R_type(unsigned int word) {
     unsigned short int opcode_bin = get_opcode(word);
     if (opcode_bin != 0) { exit(1); }
-    unsigned short int src1 = (word & 0x03E00000) >> 21;
-    unsigned short int src2 = (word & 0x001F0000) >> 16;
-    unsigned short int dest = (word & 0x0000F800) >> 11;
+    RegisterId src1 = (word & 0x03E00000) >> 21;
+    RegisterId src2 = (word & 0x001F0000) >> 16;
+    RegisterId dest = (word & 0x0000F800) >> 11;
     unsigned short int shft = (word & 0x000007C0) >>  6;
     unsigned short int func_bin = (word & 0x0000003F);
 
@@ -29,13 +29,13 @@ R_Instruction decode_R_type(unsigned int word) {
 
 I_Instruction decode_I_type(unsigned int word) {
     unsigned short int opcode_bin = get_opcode(word);
-    unsigned short int src        = (word & 0x03E00000) >> 21;
-    unsigned short int dest       = (word & 0x001F0000) >> 16;
-    unsigned short int immediate  = (word & 0x0000FFFF);
+    RegisterId src                = (word & 0x03E00000) >> 21;
+    RegisterId dest               = (word & 0x001F0000) >> 16;
+    int immediate                 = (word & 0x0000FFFF);
 
     IOpCode opcode;
 
-    switch (opcode) {
+    switch (opcode_bin) {
         default: exit(1); break;
     }
     
@@ -60,8 +60,6 @@ J_Instruction decode_J_type(unsigned int word) {
  */
 Instruction decode(unsigned int word) {
     unsigned short int opcode = get_opcode(word); 
-    // Clear out the first 6 bits
-    unsigned int       rest   = word & (0x3FFFFFF);
 
     switch (opcode) {
         case 0: 
