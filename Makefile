@@ -4,11 +4,16 @@ ARTIFACTNAME=out
 DIST=dist
 CPPFLAGS=-I include/ -Wall
 
-objects=src/main.o src/decoder.o src/runtime.o
+src=$(wildcard src/*.cpp)
+headers=$(wildcard src/*.hpp)
+objects=$(src:.cpp=.o)
 
 build: $(objects)
 	mkdir -p $(DIST)
 	$(CXX) $(LINKOPTS) -o $(DIST)/$(ARTIFACTNAME) $^
+
+check:
+	$(CXX) $(CPPFLAGS) -fsyntax-only $(src) $(headers)
 
 .PHONY: clean run
 run:
