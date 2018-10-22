@@ -154,6 +154,8 @@ void CPU::execute_j_type(J_Instruction) {
 void CPU::execute_i_type(I_Instruction inst) {
     switch (inst.opcode) {
         case IOpCode::LB:
+            set_register(inst.src2, memory.get_byte(inst.src1 + inst.immediate));
+            advance_pc(4);
             break;
         case IOpCode::LBU:
             break;
