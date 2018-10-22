@@ -35,8 +35,8 @@ bool Memory::is_data(Address addr) const {
 }
 
 /**
- * Get a word (4 bytes) from memory. 
- * 
+ * Get a word (4 bytes) from memory.
+ *
  * Throws std::invalid_argument if the address is not word-aligned (i.e. it refers to a byte)
  * or if it is out of bounds of the instruction and data memories.
  */
@@ -61,8 +61,24 @@ Word Memory::get_word(Address addr) const {
 }
 
 /**
- * Get a byte from memory. 
- * 
+ * Get a halfword from memory.
+ *
+ * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
+ */
+Halfword Memory::get_halfword(Address addr) const {
+    // Gets the word to which the byte belongs
+    Word word = get_word(addr / 2);
+    // Selects the 16 bits we are interested in
+    Word bitmasked = word & (0xFFFF << addr % 2);
+    // And shifts them to the lowest 16 bits
+    Halfword = bitmasked >> (addr % 2);
+
+    return Halfword;
+}
+
+/**
+ * Get a byte from memory.
+ *
  * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 Byte Memory::get_byte(Address addr) const {
@@ -78,7 +94,7 @@ Byte Memory::get_byte(Address addr) const {
 
 /**
  * Write a word to memory
- * 
+ *
  * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_word(Address addr, Word value) {

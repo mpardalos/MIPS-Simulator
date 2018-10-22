@@ -16,7 +16,7 @@
  */
 class Memory {
     private:
-        // Where each memory segment is located and how big it is. 
+        // Where each memory segment is located and how big it is.
         // Basically exactly as on the spec
         const int instruction_start = 0x10000000;
         const int instruction_size = 0xF000000;
@@ -25,7 +25,7 @@ class Memory {
 
         // The actual memory storage.
         // The const marker in the beginning only refers to the unique_ptr. I.e. the address of the vector is const.
-        // However, for the instruction memory the vector is marked const too. Therefore instruction memory can't be 
+        // However, for the instruction memory the vector is marked const too. Therefore instruction memory can't be
         // written to.
         const std::unique_ptr<const std::vector<Word>> instruction_memory;
         const std::unique_ptr<std::vector<Word>> data_memory;
@@ -38,6 +38,7 @@ class Memory {
         Memory(std::unique_ptr<std::vector<Word>> i_instruction_memory);
         Word get_word(Address addr) const;
         Byte get_byte(Address addr) const;
+        Halfword get_halfword(Address addr) const;
         void write_word(Address addr, Word value);
 };
 
