@@ -35,34 +35,115 @@ void CPU::execute_instruction(Instruction instruction) {
 void CPU::execute_r_type(R_Instruction inst) { 
     switch (inst.function) {
         case OpFunction::JALR:
+            set_register(31, PC);
+            nPC = get_register(inst.src1);
             break;
-        case OpFunction::JR: 
-        case OpFunction::SLL: 
-        case OpFunction::SLLV: 
-        case OpFunction::SRA: 
-        case OpFunction::SRAV: 
-        case OpFunction::SRL: 
-        case OpFunction::SRLV: 
-        case OpFunction::SLT: 
-        case OpFunction::SLTU: 
+        case OpFunction::JR:
+            PC = nPC;
+            nPC = get_register(inst.src1);
+            break;
+        case OpFunction::SLL:
+            set_register(inst.dest, (unsigned int) get_register(inst.src2) << (unsigned int) get_register(inst.shift));
+            advance_pc(4);
+            break;
+        case OpFunction::SLLV:
+            set_register(inst.dest, (unsigned int) get_register(inst.src2) << (unsigned int) get_register(inst.src1));
+            advance_pc(4);
+            break;
+        case OpFunction::SRA:
+            set_register(inst.dest, (int) get_register(inst.src2) >> (int) get_register(inst.shift));
+            advance_pc(4);
+            break; 
+        case OpFunction::SRAV:
+            set_register(inst.dest, (int) get_register(inst.src2) >> (int) get_register(inst.src1));
+            advance_pc(4);
+            break;
+        case OpFunction::SRL:
+            set_register(inst.dest, (unsigned int) get_register(inst.src2) >> (unsigned int) get_register(inst.shift));
+            advance_pc(4);
+            break;
+        case OpFunction::SRLV:
+            set_register(inst.dest, (unsigned int) get_register(inst.src2) >> (unsigned int) get_register(inst.src1));
+            advance_pc(4);
+            break;
+        case OpFunction::SLT:
+            if (get_register(inst.src2) < get_register(inst.src1)) {
+                set_register(inst.dest, 1);
+            } else {
+                set_register(inst.dest, 0);
+            }
+            advance_pc(4);
+            break;
+        case OpFunction::SLTU:
+            if ((unsigned int) get_register(inst.src2) < (unsigned int) get_register(inst.shift)) {
+                set_register(inst.dest, 1);
+            } else {
+                set_register(inst.dest, 0);
+            }
+            advance_pc(4);
+            break;
         case OpFunction::ADD:
             set_register(inst.dest, get_register(inst.src1) + get_register(inst.src2));
             advance_pc(4);
             break;
-        case OpFunction::ADDU: 
-        case OpFunction::SUB: 
-        case OpFunction::SUBU: 
-        case OpFunction::DIV: 
-        case OpFunction::DIVU: 
-        case OpFunction::MFHI: 
-        case OpFunction::MFLO: 
-        case OpFunction::MTHI: 
-        case OpFunction::MTLO: 
-        case OpFunction::MULT: 
-        case OpFunction::MULTU: 
-        case OpFunction::XOR: 
-        case OpFunction::OR: 
-        case OpFunction::AND: break;
+        case OpFunction::ADDU:
+            set_register(inst.dest, (unsigned int) get_register(inst.src2) + (unsigned int) get_register(inst.src1));
+            advance_pc(4);
+            break;
+        case OpFunction::SUB:
+            set_register(inst.dest, get_register(inst.src1) - get_register(inst.src2));
+            advance_pc(4);
+            break;
+        case OpFunction::SUBU:
+            set_register(inst.dest, (unsigned int) get_register(inst.src1) - (unsigned int) get_register(inst.src2));
+            advance_pc(4);
+            break;
+        case OpFunction::DIV:
+            LO = get_register(inst.src1) / get_register(inst.src2);
+            HI = get_register(inst.src1) % get_register(inst.src2);
+            advance_pc(4);
+            break;
+        case OpFunction::DIVU:
+            LO = (unsigned int) get_register(inst.src1) / (unsigned int) get_register(inst.src2);
+            HI = (unsigned int) get_register(inst.src1) % (unsigned int) get_register(inst.src2);
+            advance_pc(4);
+            break;
+        case OpFunction::MFHI:
+            set_register(inst.dest, HI);
+            advance_pc(4);
+            break;
+        case OpFunction::MFLO:
+            set_register(inst.dest, LO);
+            advance_pc(4);
+            break;
+        case OpFunction::MTHI:
+            HI = get_register(inst.src1);
+            advance_pc(4);
+            break;
+        case OpFunction::MTLO:
+            LO = get_register(inst.src1);
+            advance_pc(4);
+            break;
+        case OpFunction::MULT:
+            LO = get_register(inst.src1) * get_register(inst.src2);
+            advance_pc(4);
+            break;
+        case OpFunction::MULTU:
+            LO = (unsigned int) get_register(inst.src1) * (unsigned int) get_register(inst.src2);
+            advance_pc(4);
+            break;
+        case OpFunction::XOR:
+            set_register(inst.dest, get_register(inst.src1) ^ get_register(inst.src2));
+            advance_pc(4);
+            break;
+        case OpFunction::OR:
+            set_register(inst.dest, get_register(inst.src1) | get_register(inst.src2));
+            advance_pc(4);
+            break;
+        case OpFunction::AND:
+            set_register(inst.dest, get_register(inst.src1) & get_register(inst.src2));
+            advance_pc(4);
+            break;
         default: break;
     }
 }

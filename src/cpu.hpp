@@ -13,6 +13,8 @@ class CPU {
 
         Address PC = 0x10000000;
         Address nPC = 0x10000004;
+        int LO = 0;
+        int HI = 0;
 
         int get_register(RegisterId reg) const;
         void set_register(RegisterId reg, int value);
