@@ -153,8 +153,53 @@ void CPU::execute_j_type(J_Instruction) {
 
 void CPU::execute_i_type(I_Instruction inst) {
     switch (inst.opcode) {
+        case IOpCode::LB:
+            break;
+        case IOpCode::LBU:
+            break;
+        case IOpCode::LH:
+            break;
+        case IOpCode::LHU:
+            break;
+        case IOpCode::LUI:
+            break;
         case IOpCode::LW:
-            set_register(inst.dest, memory.get_word(inst.immediate));
+            break;
+        case IOpCode::LWL:
+            break;
+        case IOpCode::LWR:
+            break;
+        case IOpCode::SB:
+            break;
+        case IOpCode::SH:
+            break;
+        case IOpCode::SW:
+            break;
+        case IOpCode::BEQ:
+            break;
+        case IOpCode::BGTZ:
+            break;
+        case IOpCode::BLEZ:
+            break;
+        case IOpCode::BLTZ:
+            break;
+        case IOpCode::BLTZAL:
+            break;
+        case IOpCode::BNE:
+            break;
+        case IOpCode::ORI:
+            break;
+        case IOpCode::ANDI:
+            break;
+        case IOpCode::SLTI:
+            break;
+        case IOpCode::SLTIU:
+            break;
+        case IOpCode::XORI:
+            break;
+        case IOpCode::ADDI:
+            break;
+        case IOpCode::ADDIU:
             break;
     }
 }
