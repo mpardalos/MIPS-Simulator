@@ -71,9 +71,9 @@ Halfword Memory::get_halfword(Address addr) const {
     // Selects the 16 bits we are interested in
     Word bitmasked = word & (0xFFFF << addr % 2);
     // And shifts them to the lowest 16 bits
-    Halfword = bitmasked >> (addr % 2);
+    Halfword halfword = bitmasked >> (addr % 2);
 
-    return Halfword;
+    return halfword;
 }
 
 /**
@@ -105,6 +105,58 @@ void Memory::write_word(Address addr, Word value) {
     } else if (is_data(addr)) {
         int data_index = (addr - data_start) / 4;
         data_memory->at(data_index) = value;
+    } else {
+        std::stringstream ss;
+        ss << "Address " << addr << " is out of bounds";
+        throw invalid_argument(ss.str());
+    }
+}
+
+/**
+ * Write a word to memory
+ *
+ * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
+ */
+void Memory::write_halfword(Address addr, Halfword value) {
+    if (addr % 2 != 0) throw invalid_argument("Halfword access must be halfword-aligned");
+
+    if (is_instruction(addr)) {
+        throw invalid_argument("Instruction memory is read-only");
+    } else if (is_data(addr)) {
+        Address data_index = (addr - data_start) / 4;
+        Word current = get_word(data_index);
+
+         data_memory->at(data_index) = (addr % 4 == 0)
+            ? ((Word) value << 16) | (current & 0x0000FFFF)
+            : ((Word) value)       | (current & 0xFFFF0000);
+    } else {
+        std::stringstream ss;
+        ss << "Address " << addr << " is out of bounds";
+        throw invalid_argument(ss.str());
+    }
+}
+
+/**
+ * Write a word to memory
+ *
+ * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
+ */
+void Memory::write_byte(Address addr, Byte value) {
+    if (addr % 2 != 0) throw invalid_argument("Halfword access must be halfword-aligned");
+
+    if (is_instruction(addr)) {
+        throw invalid_argument("Instruction memory is read-only");
+    } else if (is_data(addr)) {
+        Address data_index = (addr - data_start) / 4;
+        Word current = get_word(data_index);
+
+        switch (addr % 4) {
+            case 0: data_memory->at(data_index) = ((Word) value << 24) | (current & 0x00FFFFFF); break;
+            case 1: data_memory->at(data_index) = ((Word) value << 16) | (current & 0xFF00FFFF); break;
+            case 2: data_memory->at(data_index) = ((Word) value << 8 ) | (current & 0xFFFF00FF); break;
+            case 3: data_memory->at(data_index) = ((Word) value      ) | (current & 0xFFFFFF00); break;
+
+        }
     } else {
         std::stringstream ss;
         ss << "Address " << addr << " is out of bounds";

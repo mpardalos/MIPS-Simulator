@@ -36,10 +36,15 @@ class Memory {
 
     public:
         Memory(std::unique_ptr<std::vector<Word>> i_instruction_memory);
-        Word get_word(Address addr) const;
+        Word get_word(Address) const;
+        void write_word(Address, Word);
+
         Byte get_byte(Address addr) const;
-        Halfword get_halfword(Address addr) const;
-        void write_word(Address addr, Word value);
+        void write_byte(Address, Byte);
+
+        Halfword get_halfword(Address) const;
+        void write_halfword(Address, Halfword);
+
 };
 
 #endif

@@ -158,144 +158,129 @@ void CPU::execute_j_type(J_Instruction) {
 void CPU::execute_i_type(I_Instruction inst) {
     switch (inst.opcode) {
         case IOpCode::LB:
-            set_register(inst.src2, memory.get_byte(inst.src1 + inst.immediate));
+            set_register(inst.dest, memory.get_byte(inst.src + inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::LBU:
-            set_register( (unsigned int) inst.src2, memory.get_byte( (unsigned int) inst.src1 + inst.immediate));
+            set_register( (unsigned int) inst.dest, memory.get_byte( (unsigned int) inst.src + inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::LH:
-            set_register(inst.src2, memory.get_halfword(inst.src1 + inst.immediate));
+            set_register(inst.dest, memory.get_halfword(inst.src + inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::LHU:
-            set_register( (unsigned int) inst.src2, memory.get_halfword( (unsigned int) inst.src1 + inst.immediate));
+            set_register( (unsigned int) inst.dest, memory.get_halfword( (unsigned int) inst.src + inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::LUI:
-            set_register(inst.src2, (inst.immediate << 16));
+            set_register(inst.dest, (inst.immediate << 16));
             advance_pc(4);
             break;
         case IOpCode::LW:
-            set_register(inst.src2, memory.get_word(get_register(inst.src1) + inst.immediate));
+            set_register(inst.dest, memory.get_word(get_register(inst.src) + inst.immediate));
             advance_pc(4);
             break;
-        case IOpCode::LWL: //Double Check This
+        case IOpCode::LWL:
             //Gets the first 8 bits of the word and replaces it the first 8 bits in the dest reg
-            set_register(inst.src2, (memory.get_byte(inst.immediate + inst.src1) & 0xFF00) + (get_register(inst.src2) & 0x00FF));
+            set_register(inst.dest, (memory.get_byte(inst.immediate + inst.src) & 0xFF00) | (get_register(inst.dest) & 0x00FF));
             advance_pc(4);
             break;
-        case IOpCode::LWR: //Double Check this
-            set_register(inst.src2, (memory.get_byte(inst.immediate + inst.src1) & 0x00FF) + (get_register(inst.src2) & 0xFF00));
+        case IOpCode::LWR: 
+            set_register(inst.dest, (memory.get_byte(inst.immediate + inst.src) & 0x00FF) | (get_register(inst.dest) & 0xFF00));
             advance_pc(4);
             break;
-        case IOpCode::SB: //Confused as how to store ??
-
+        case IOpCode::SB:
+            memory.write_byte(inst.dest+inst.immediate, get_register(inst.src) & 0xFF);
             advance_pc(4);
             break;
         case IOpCode::SH:
-
+            memory.write_halfword(inst.dest+inst.immediate, get_register(inst.src) & 0xFFFF);
             advance_pc(4);
             break;
         case IOpCode::SW:
-
+            memory.write_word(inst.dest+inst.immediate, get_register(inst.src));
             advance_pc(4);
             break;
         case IOpCode::BEQ:
-            if(get_register(inst.src1) == get_register(inst.src2)) {
-                advance_pc(inst.immediate << 2);
-            } else {
-                advance_pc(4);
-            }
-            break;
-        case IOpCode::BQEZ:
-            if(get_register(inst.src1) >= 0) {
+            if(get_register(inst.src) == get_register(inst.dest)) {
                 advance_pc(inst.immediate << 2);
             } else {
                 advance_pc(4);
             }
             break;
         case IOpCode::BGTZ:
-            if(get_register(inst.src1) > 0) {
-                advance_pc(inst.immediate << 2);
-            } else {
-                advance_pc(4);
-            }
-            break;
-        case IOpCode::BGEZAL:
-            if(get_register(inst.src1) >= 0) {
-                set_register(31) = PC + 8;
+            if(get_register(inst.src) > 0) {
                 advance_pc(inst.immediate << 2);
             } else {
                 advance_pc(4);
             }
             break;
         case IOpCode::BLEZ:
-            if(get_register(inst.src1) <= 0) {
+            if(get_register(inst.src) <= 0) {
                 advance_pc(inst.immediate << 2);
             } else {
                 advance_pc(4);
             }
             break;
         case IOpCode::BLTZ:
-            if(get_register(inst.src1) < 0) {
+            if(get_register(inst.src) < 0) {
                 advance_pc(inst.immediate << 2);
             } else {
                 advance_pc(4);
             }
             break;
         case IOpCode::BLTZAL:
-            if(get_register(inst.src1) < 0) {
-                set_register(31) = PC + 8;
+            if(get_register(inst.src) < 0) {
+                set_register(31, PC + 8);
                 advance_pc(inst.immediate << 2);
             } else {
                 advance_pc(4);
             }
             break;
         case IOpCode::BNE:
-            if(get_register(inst.src1) != get_register(inst.src2)) {
+            if(get_register(inst.src) != get_register(inst.dest)) {
                 advance_pc(inst.immediate << 2);
             } else {
                 advance_pc(4);
             }
             break;
-        case IOpCode::ORI: //Do I need to call immediate or can I leave it as inst.immediate?
-            set_register(inst.src2, get_register(inst.src1) | inst.immediate);
+        case IOpCode::ORI:
+            set_register(inst.dest, get_register(inst.src) | inst.immediate);
             advance_pc(4);
             break;
         case IOpCode::ANDI:
-            set_register(inst.src2, get_register(inst.src1) & inst.immediate);
+            set_register(inst.dest, get_register(inst.src) & inst.immediate);
             advance_pc(4);
             break;
         case IOpCode::SLTI:
-            if(get_register(inst.src1) < inst.immediate) {
-                set_register(inst.src2, 1);
+            if(get_register(inst.src) < inst.immediate) {
+                set_register(inst.dest, 1);
                 advance_pc(4);
             } else {
-                set_register(inst.src2, 0);
+                set_register(inst.dest, 0);
                 advance_pc(4);
             }
             break;
         case IOpCode::SLTIU:
-            if(get_register(inst.src1) < (unsigned int) inst.immediate) {
-                set_register(inst.src2, 1);
+            if(get_register(inst.src) < (unsigned int) inst.immediate) {
+                set_register(inst.dest, 1);
                 advance_pc(4);
             } else {
-                set_register(inst.src2, 0);
+                set_register(inst.dest, 0);
                 advance_pc(4);
             }
             break;
         case IOpCode::XORI:
-            set_register(inst.src2, get_register(inst.src1) ^ inst.immediate);
+            set_register(inst.dest, get_register(inst.src) ^ inst.immediate);
             advance_pc(4);
             break;
         case IOpCode::ADDI:
-            set_register(inst.src2, get_register(inst.src1) + inst.immediate);
+            set_register(inst.dest, get_register(inst.src) + inst.immediate);
             advance_pc(4);
             break;
         case IOpCode::ADDIU:
-            set_register(inst.src2, (unsigned int) get_register(inst.src1) + inst.immediate);
+            set_register(inst.dest, (unsigned int) get_register(inst.src) + inst.immediate);
             advance_pc(4);
             break;
     }
