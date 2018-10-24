@@ -36,3 +36,6 @@
 
 # Output directory
 dist/
+
+# compiled assembly files
+*.bin
