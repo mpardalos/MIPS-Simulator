@@ -5,6 +5,9 @@
 #include "mapbox/variant.hpp"
 
 #include "opcodes.hpp"
+#include "debug.hpp"
+
+using namespace std;
 
 unsigned short int get_opcode(unsigned int word) { return word >> 26; }
 
@@ -46,7 +49,10 @@ R_Instruction decode_R_type(unsigned int word) {
         case 0b100110: func = OpFunction::XOR; break;
         case 0b100101: func = OpFunction::OR; break;
         case 0b100100: func = OpFunction::AND; break;
-        default: exit(1); break;
+
+        default: 
+            throw invalid_argument(string("Could not match function code ") + to_string(opcode_bin));
+            break;
     }
 
     return { dest, src1, src2, shft, func };
@@ -56,35 +62,37 @@ I_Instruction decode_I_type(unsigned int word) {
     unsigned short int opcode_bin = get_opcode(word);
     RegisterId src                = (word & 0x03E00000) >> 21;
     RegisterId dest               = (word & 0x001F0000) >> 16;
-    Offset immediate                 = (word & 0x0000FFFF);
+    Offset immediate              = (word & 0x0000FFFF);
 
     IOpCode opcode;
 
     switch (opcode_bin) {
-        case 0b100000: opcode = IOpCode::LB;      //   Load byte [..] 0b100000 or 32
-        case 0b100100: opcode = IOpCode::LBU;     //   Load byte unsigned [..] 0b100100 or 36
-        case 0b100001: opcode = IOpCode::LH;      //   Load half-word [..] 0b100001 or 33
-        case 0b100101: opcode = IOpCode::LHU;     //   Load half-word unsigned [..] 0b100101 or 37
-        case 0b001111: opcode = IOpCode::LUI;     //   Load upper immediate [..] 0b001111 or 15 [..] Src = 0
-        case 0b100011: opcode = IOpCode::LW;      //   Load word [..] 0b100011 or 35
-        case 0b100010: opcode = IOpCode::LWL;     //   Load word left [..] 0b100010 or 34
-        case 0b100110: opcode = IOpCode::LWR;     //   Load word right [..] 0b100110 or 38
-        case 0b101000: opcode = IOpCode::SB;      //   Store byte [..] 0b101000 or 40
-        case 0b101001: opcode = IOpCode::SH;      //   Store half-word [..] 0b101001 or 41
-        case 0b101011: opcode = IOpCode::SW;      //   Store word [..] 0b101011 or 43
-        case 0b000100: opcode = IOpCode::BEQ;     //   Branch on equal [..] 0b000100 or 4
-        case 0b000111: opcode = IOpCode::BGTZ;    //   Branch on greater than zero [..] 0b000111 or 7 [..] Dest = 0b00000
-        case 0b000110: opcode = IOpCode::BLEZ;    //   Branch on less than or equal to zero [..] 0b000110 or 6 [..] Dest = 0b00000
-        case 0b000101: opcode = IOpCode::BNE;     //   Branch on not equal [..] 0b000101 or 5
-        case 0b001101: opcode = IOpCode::ORI;     //   Bitwise or immediate [..] 0b001101 or 13
-        case 0b001100: opcode = IOpCode::ANDI;    //   Bitwise and immediate [..] 0b001100 or 12
-        case 0b001010: opcode = IOpCode::SLTI;    //   Set on less than immediate (signed) [..] 0b001010 or 10
-        case 0b001011: opcode = IOpCode::SLTIU;   //   Set on less than immediate unsigned [..] 0b001011 or 11
-        case 0b001110: opcode = IOpCode::XORI;    //   Bitwise exclusive or immediate [..] 0b001110 or 14
-        case 0b001000: opcode = IOpCode::ADDI;    //   Add immediate (with overflow) [..] 0b001000 or 8
-        case 0b001001: opcode = IOpCode::ADDIU;   //   Add immediate unsigned (no overflow) [..] 0b001001 or 9
+        case 0b100000: opcode = IOpCode::LB; break;      //   Load byte [..] 0b100000 or 32
+        case 0b100100: opcode = IOpCode::LBU; break;     //   Load byte unsigned [..] 0b100100 or 36
+        case 0b100001: opcode = IOpCode::LH; break;      //   Load half-word [..] 0b100001 or 33
+        case 0b100101: opcode = IOpCode::LHU; break;     //   Load half-word unsigned [..] 0b100101 or 37
+        case 0b001111: opcode = IOpCode::LUI; break;     //   Load upper immediate [..] 0b001111 or 15 [..] Src = 0
+        case 0b100011: opcode = IOpCode::LW; break;      //   Load word [..] 0b100011 or 35
+        case 0b100010: opcode = IOpCode::LWL; break;     //   Load word left [..] 0b100010 or 34
+        case 0b100110: opcode = IOpCode::LWR; break;     //   Load word right [..] 0b100110 or 38
+        case 0b101000: opcode = IOpCode::SB; break;      //   Store byte [..] 0b101000 or 40
+        case 0b101001: opcode = IOpCode::SH; break;      //   Store half-word [..] 0b101001 or 41
+        case 0b101011: opcode = IOpCode::SW; break;      //   Store word [..] 0b101011 or 43
+        case 0b000100: opcode = IOpCode::BEQ; break;     //   Branch on equal [..] 0b000100 or 4
+        case 0b000111: opcode = IOpCode::BGTZ; break;    //   Branch on greater than zero [..] 0b000111 or 7 [..] Dest = 0b00000
+        case 0b000110: opcode = IOpCode::BLEZ; break;    //   Branch on less than or equal to zero [..] 0b000110 or 6 [..] Dest = 0b00000
+        case 0b000101: opcode = IOpCode::BNE; break;     //   Branch on not equal [..] 0b000101 or 5
+        case 0b001101: opcode = IOpCode::ORI; break;     //   Bitwise or immediate [..] 0b001101 or 13
+        case 0b001100: opcode = IOpCode::ANDI; break;    //   Bitwise and immediate [..] 0b001100 or 12
+        case 0b001010: opcode = IOpCode::SLTI; break;    //   Set on less than immediate (signed) [..] 0b001010 or 10
+        case 0b001011: opcode = IOpCode::SLTIU; break;   //   Set on less than immediate unsigned [..] 0b001011 or 11
+        case 0b001110: opcode = IOpCode::XORI; break;    //   Bitwise exclusive or immediate [..] 0b001110 or 14
+        case 0b001000: opcode = IOpCode::ADDI; break;    //   Add immediate (with overflow) [..] 0b001000 or 8
+        case 0b001001: opcode = IOpCode::ADDIU; break;   //   Add immediate unsigned (no overflow) [..] 0b001001 or 9
 
-        default: exit(1); break;
+        default: 
+            throw invalid_argument(string("Could not match i type opcode ") + to_string(opcode_bin));
+            break;
     }
     
     return I_Instruction { opcode, src, dest, immediate };
@@ -93,11 +101,14 @@ I_Instruction decode_I_type(unsigned int word) {
 J_Instruction decode_J_type(unsigned int word) {
     JOpCode opcode;
     Address address = word & 0x3FFFFFF;
+    uint8_t opcode_bin = get_opcode(word);
 
-    switch (get_opcode(word)) {
+    switch (opcode_bin) {
         case 2: opcode = JOpCode::J; break;
         case 3: opcode = JOpCode::JAL; break;   
-        default: exit(1); break;
+        default: 
+            throw invalid_argument(string("Could not match j type opcode ") + to_string(opcode_bin));
+            break;
     }
     
     return J_Instruction { opcode, address };
@@ -114,6 +125,9 @@ REGIMM_Instruction decode_REGIMM(Word word) {
         case 0b10001: code = REGIMMCode::BGEZAL; break;
         case 0b00000: code = REGIMMCode::BLTZ; break;
         case 0b10000: code = REGIMMCode::BLTZAL; break;
+        default: 
+            throw invalid_argument(string("Could not match REGIMM code ") + to_string(regimm_code_bin));
+            break;
     }
 
     return REGIMM_Instruction { src, code, offset };
@@ -136,28 +150,3 @@ Instruction decode(unsigned int word) {
             return decode_I_type(word);
     }
 }
-
-std::vector<Instruction> load_file(std::string path) {
-    std::ifstream inFile;
-    std::vector<unsigned int> instructions;
-
-    inFile.open(path.c_str());
-    if (!inFile.is_open()) {
-        std::cout << "File does not exiiiist\n";
-        exit(1);
-    }
-
-    auto current_instruction = instructions.begin();
-    while (inFile >> *current_instruction) {
-        current_instruction++;
-    }
-
-    std::vector<Instruction> result;
-    for (auto instruction=instructions.begin(); instruction < instructions.end(); instruction++) {
-        /* result.push_back(decode(instruction)); */
-    }
-
-    return result;
-}
-
-

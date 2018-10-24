@@ -5,6 +5,5 @@
 #include "opcodes.hpp"
 
 Instruction decode(unsigned int word);
-std::vector<Instruction> load_file(std::string path);
 
 #endif
