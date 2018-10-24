@@ -26,10 +26,10 @@ void CPU::run() {
 
 void CPU::execute_instruction(Instruction instruction) {
     instruction.match(
-        [&] (R_Instruction inst) {execute_r_type(inst);},
-        [&] (I_Instruction inst) {execute_i_type(inst);},
-        [&] (J_Instruction inst) {execute_j_type(inst);},
-        [&] (REGIMM_Instruction inst) {execute_REGIMM_type(inst);}
+        [&] (R_Instruction      inst) {      execute_r_type(inst); },
+        [&] (I_Instruction      inst) {      execute_i_type(inst); },
+        [&] (J_Instruction      inst) {      execute_j_type(inst); },
+        [&] (REGIMM_Instruction inst) { execute_REGIMM_type(inst); }
     );
 }
 

@@ -1,7 +1,11 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 #include "memory.hpp"
+#include "loader.hpp"
+#include "decoder.hpp"
+#include "cpu.hpp"
 
 using namespace std;
 
@@ -42,9 +46,18 @@ void memtest() {
     }
 }
 
+
+
 int main(int argc, char** argv) {
     if (argc >= 2 && string(argv[1]) == string("-memtest")) {
         memtest();
+    } else if (argc >= 2) {
+        auto filename = argv[1];
+        vector<Word> instructions_bin = read_file(filename);
+        CPU cpu((unique_ptr<vector<Word>>(&instructions_bin)));
+        cpu.run();
     }
+    
+
     return 0;
 }
