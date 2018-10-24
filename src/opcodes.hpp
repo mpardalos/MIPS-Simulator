@@ -123,6 +123,6 @@ struct J_Instruction {
     Address address;
 };
 
-typedef mapbox::util::variant<R_Instruction, I_Instruction, J_Instruction> Instruction;
+typedef mapbox::util::variant<R_Instruction, I_Instruction, J_Instruction, REGIMM_Instruction> Instruction;
 
 #endif
