@@ -153,6 +153,52 @@ void CPU::execute_r_type(R_Instruction inst) {
 }
 
 void CPU::execute_j_type(J_Instruction) {
+    switch (inst.opcode) {
+        case JOpCode::J:
+            PC = nPC;
+            nPC = (PC & 0xF0000000) | (inst.address << 2);
+            break;
+        case JOpCode::JAR:
+            set_register(31, PC + 8);
+            PC = nPC;
+            nPC = (PC & 0xF0000000) | (inst.address << 2);
+            break;
+    }
+}
+
+void CPU::execute_REGIMM_type(REGIMM_Instruction) {
+    switch (inst.opcode) {
+        case REGIMMCode::BGEZ:
+            if(get_register(inst.src) >= 0) {
+                advance_pc(inst.immediate << 2);
+            } else {
+                advance_pc(4);
+            }
+            break;
+        case REGIMMCode::BGEZAL:
+            if(get_register(inst.src) >= 0) {
+                set_register(31, PC + 8);
+                advance_pc(inst.immediate << 2);
+            } else {
+                advance_pc(4);
+            }
+            break;
+        case REGIMMCode::BLTZ:
+            if(get_register(inst.src) < 0) {
+                advance_pc(inst.immediate << 2);
+            } else {
+                advance_pc(4);
+            }
+            break;
+        case REGIMMCode::BLTZAL:
+            if(get_register(inst.src) < 0) {
+                set_register(31, PC + 8);
+                advance_pc(inst.offset << 2);
+            } else {
+                advance_pc(4);
+            }
+            break;
+    }
 }
 
 void CPU::execute_i_type(I_Instruction inst) {
@@ -218,21 +264,6 @@ void CPU::execute_i_type(I_Instruction inst) {
             break;
         case IOpCode::BLEZ:
             if(get_register(inst.src) <= 0) {
-                advance_pc(inst.immediate << 2);
-            } else {
-                advance_pc(4);
-            }
-            break;
-        case IOpCode::BLTZ:
-            if(get_register(inst.src) < 0) {
-                advance_pc(inst.immediate << 2);
-            } else {
-                advance_pc(4);
-            }
-            break;
-        case IOpCode::BLTZAL:
-            if(get_register(inst.src) < 0) {
-                set_register(31, PC + 8);
                 advance_pc(inst.immediate << 2);
             } else {
                 advance_pc(4);

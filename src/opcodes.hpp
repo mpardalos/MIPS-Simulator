@@ -29,8 +29,6 @@ enum class IOpCode {
     BEQ,     //   Branch on equal [..] 0b000100 or 4
     BGTZ,    //   Branch on greater than zero [..] 0b000111 or 7 [..] Dest = 0b00000
     BLEZ,    //   Branch on less than or equal to zero [..] 0b000110 or 6 [..] Dest = 0b00000
-    BLTZ,    //   Branch on less than zero [..] 0b000001 or 1 [..] Dest = 0b00000
-    BLTZAL,  //   Branch on less than zero and link [..] 0b000001 or 1 [..] Dest = 0b10000
     BNE,     //   Branch on not equal [..] 0b000101 or 5
 
     // Logical
