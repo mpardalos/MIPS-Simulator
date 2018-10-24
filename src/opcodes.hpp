@@ -4,10 +4,6 @@
 #include "mapbox/variant.hpp"
 #include "typedefs.hpp"
 
-enum class ROpCode { 
-    SPECIAL // This opcode is always 0
- };
-
 enum class JOpCode {
     J,       //   Jump
     JAL,     //   Jump and link
@@ -31,8 +27,6 @@ enum class IOpCode {
 
     // Branching
     BEQ,     //   Branch on equal [..] 0b000100 or 4
-    BGEZ,    //   Branch on greater than or equal to zero [..] 0b000001 or 1 [..] Dest = 0b00001
-    BGEZAL,  //   Branch on non-negative (>=0) and link [..] 0b000001 or 1 [..] Dest = 0b00001
     BGTZ,    //   Branch on greater than zero [..] 0b000111 or 7 [..] Dest = 0b00000
     BLEZ,    //   Branch on less than or equal to zero [..] 0b000110 or 6 [..] Dest = 0b00000
     BLTZ,    //   Branch on less than zero [..] 0b000001 or 1 [..] Dest = 0b00000
@@ -50,6 +44,13 @@ enum class IOpCode {
     ADDI,    //   Add immediate (with overflow) [..] 0b001000 or 8
     ADDIU,   //   Add immediate unsigned (no overflow) [..] 0b001001 or 9
 
+};
+
+enum class REGIMMCode {
+    BGEZ, // Branch on Greater Than or Equal to Zero (0b00001)
+    BGEZAL, // Branch on Greater Than or Equal to Zero and Link (0b10001)
+    BLTZ, // Branch on less than zero (0b00000)
+    BLTZAL, // Branch on less than zero and link (0b10000) 
 };
 
 enum class OpFunction {
@@ -97,7 +98,6 @@ enum class SpecialOpCode {
 };
 
 struct R_Instruction {
-    ROpCode opcode;
     RegisterId dest;
     RegisterId src1; 
     RegisterId src2; 
@@ -111,7 +111,13 @@ struct I_Instruction {
     RegisterId src;
     RegisterId dest;
 
-    int immediate;
+    Offset immediate;
+};
+
+struct REGIMM_Instruction {
+    RegisterId src;
+    REGIMMCode code;
+    Offset offset;
 };
 
 struct J_Instruction {
