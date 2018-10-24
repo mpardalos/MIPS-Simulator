@@ -28,7 +28,8 @@ void CPU::execute_instruction(Instruction instruction) {
     instruction.match(
         [&] (R_Instruction inst) {execute_r_type(inst);},
         [&] (I_Instruction inst) {execute_i_type(inst);},
-        [&] (J_Instruction inst) {execute_j_type(inst);}
+        [&] (J_Instruction inst) {execute_j_type(inst);},
+        [&] (REGIMM_Instruction inst) {execute_REGIMM_type(inst);}
     );
 }
 
@@ -152,13 +153,13 @@ void CPU::execute_r_type(R_Instruction inst) {
     }
 }
 
-void CPU::execute_j_type(J_Instruction) {
+void CPU::execute_j_type(J_Instruction inst) {
     switch (inst.opcode) {
         case JOpCode::J:
             PC = nPC;
             nPC = (PC & 0xF0000000) | (inst.address << 2);
             break;
-        case JOpCode::JAR:
+        case JOpCode::JAL:
             set_register(31, PC + 8);
             PC = nPC;
             nPC = (PC & 0xF0000000) | (inst.address << 2);
@@ -166,11 +167,11 @@ void CPU::execute_j_type(J_Instruction) {
     }
 }
 
-void CPU::execute_REGIMM_type(REGIMM_Instruction) {
-    switch (inst.opcode) {
+void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
+    switch (inst.code) {
         case REGIMMCode::BGEZ:
             if(get_register(inst.src) >= 0) {
-                advance_pc(inst.immediate << 2);
+                advance_pc(inst.offset << 2);
             } else {
                 advance_pc(4);
             }
@@ -178,14 +179,14 @@ void CPU::execute_REGIMM_type(REGIMM_Instruction) {
         case REGIMMCode::BGEZAL:
             if(get_register(inst.src) >= 0) {
                 set_register(31, PC + 8);
-                advance_pc(inst.immediate << 2);
+                advance_pc(inst.offset << 2);
             } else {
                 advance_pc(4);
             }
             break;
         case REGIMMCode::BLTZ:
             if(get_register(inst.src) < 0) {
-                advance_pc(inst.immediate << 2);
+                advance_pc(inst.offset << 2);
             } else {
                 advance_pc(4);
             }

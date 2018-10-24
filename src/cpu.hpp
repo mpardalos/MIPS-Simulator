@@ -28,5 +28,6 @@ class CPU {
         void execute_r_type(R_Instruction inst);
         void execute_j_type(J_Instruction);
         void execute_i_type(I_Instruction);
+        void execute_REGIMM_type(REGIMM_Instruction);
 
 };
