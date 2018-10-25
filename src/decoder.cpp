@@ -146,7 +146,10 @@ Instruction decode(unsigned int word) {
             return decode_REGIMM(word);
         case 2: case 3: 
             return decode_J_type(word);
-        default: 
+        case 4:
             return decode_I_type(word);
+        default: 
+        // Invalid Instruction (Opcode cannot be found)
+            std::exit(-12);
     }
 }
