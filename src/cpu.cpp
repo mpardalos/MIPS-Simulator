@@ -295,7 +295,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             }
             break;
         case IOpCode::SLTIU:
-            if(get_register(inst.src) < (unsigned int) inst.immediate) {
+            if((unsigned int) get_register(inst.src) < (unsigned int) inst.immediate) {
                 set_register(inst.dest, 1);
                 advance_pc(4);
             } else {
