@@ -39,3 +39,7 @@ dist/
 
 # compiled assembly files
 *.bin
+
+# Ignored for now
+testbench/
+assembly/
