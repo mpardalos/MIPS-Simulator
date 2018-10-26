@@ -96,25 +96,29 @@ enum class SpecialOpCode {
 };
 
 struct R_Instruction {
-    RegisterId dest;
-    RegisterId src1; 
-    RegisterId src2; 
-    unsigned short int shift;
     OpFunction function;
+
+    RegisterId dest;
+    RegisterId src1;
+    RegisterId src2;
+
+    unsigned short int shift;
 };
 
 struct I_Instruction {
     IOpCode opcode;
 
-    RegisterId src;
     RegisterId dest;
+    RegisterId src;
 
     Offset immediate;
 };
 
 struct REGIMM_Instruction {
-    RegisterId src;
     REGIMMCode code;
+
+    RegisterId src;
+
     Offset offset;
 };
 

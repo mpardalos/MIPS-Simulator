@@ -55,7 +55,7 @@ R_Instruction decode_R_type(unsigned int word) {
             break;
     }
 
-    return { dest, src1, src2, shft, func };
+    return R_Instruction { func, dest, src1, src2, shft };
 }
 
 I_Instruction decode_I_type(unsigned int word) {
@@ -95,7 +95,7 @@ I_Instruction decode_I_type(unsigned int word) {
             break;
     }
     
-    return I_Instruction { opcode, src, dest, immediate };
+    return I_Instruction { opcode, dest, src, immediate };
 }
 
 J_Instruction decode_J_type(unsigned int word) {
@@ -130,7 +130,7 @@ REGIMM_Instruction decode_REGIMM(Word word) {
             break;
     }
 
-    return REGIMM_Instruction { src, code, offset };
+    return REGIMM_Instruction { code, src, offset };
 }
 
 /**
