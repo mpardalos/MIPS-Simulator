@@ -7,6 +7,7 @@
 #include "opcodes.hpp"
 #include "typedefs.hpp"
 #include "memory.hpp"
+#include "exceptions.hpp"
 
 using namespace std;
 
@@ -104,13 +105,13 @@ void Memory::write_word(Address addr, Word value) {
         //throw invalid_argument("Word access must be word-aligned");
 
     if (is_instruction(addr)) {
-        std::exit(-11);
+        throw MemoryError();
         // throw invalid_argument("Instruction memory is read-only");
     } else if (is_data(addr)) {
         int data_index = (addr - data_start) / 4;
         data_memory->at(data_index) = value;
     } else {
-        std::exit(-11);
+        throw MemoryError();
     //     std::stringstream ss;
     //     ss << "Address " << addr << " is out of bounds";
     //     throw invalid_argument(ss.str());
@@ -137,7 +138,7 @@ void Memory::write_halfword(Address addr, Halfword value) {
             ? ((Word) value << 16) | (current & 0x0000FFFF)
             : ((Word) value)       | (current & 0xFFFF0000);
     } else {
-        std::exit(-11);
+        throw MemoryError();
         // std::stringstream ss;
         // ss << "Address " << addr << " is out of bounds";
         // throw invalid_argument(ss.str());
@@ -154,7 +155,7 @@ void Memory::write_byte(Address addr, Byte value) {
     // throw invalid_argument("Halfword access must be halfword-aligned");
 
     if (is_instruction(addr)) {
-        std::exit(-11);
+        throw MemoryError();
         //throw invalid_argument("Instruction memory is read-only");
     } else if (is_data(addr)) {
         Address data_index = (addr - data_start) / 4;
@@ -168,7 +169,7 @@ void Memory::write_byte(Address addr, Byte value) {
 
         }
     } else {
-        std::exit(-11);
+        throw MemoryError();
         // std::stringstream ss;
         // ss << "Address " << addr << " is out of bounds";
         // throw invalid_argument(ss.str());

@@ -1,4 +1,7 @@
+#include <algorithm>
+
 #include "cpu.hpp"
+#include "exceptions.hpp"
 
 CPU::CPU(std::unique_ptr<std::vector<Word>> instructions) : memory(std::move(instructions)) {}
 
@@ -25,12 +28,16 @@ void CPU::run() {
 }
 
 void CPU::execute_instruction(Instruction instruction) {
-    instruction.match(
-        [&] (R_Instruction      inst) {      execute_r_type(inst); },
-        [&] (I_Instruction      inst) {      execute_i_type(inst); },
-        [&] (J_Instruction      inst) {      execute_j_type(inst); },
-        [&] (REGIMM_Instruction inst) { execute_REGIMM_type(inst); }
-    );
+    try {
+        instruction.match(
+            [&] (R_Instruction      inst) {      execute_r_type(inst); },
+            [&] (I_Instruction      inst) {      execute_i_type(inst); },
+            [&] (J_Instruction      inst) {      execute_j_type(inst); },
+            [&] (REGIMM_Instruction inst) { execute_REGIMM_type(inst); }
+        );
+    } catch (MIPSError &err) {
+        std::exit(err.get_error_code());
+    };
 }
 
 void CPU::execute_r_type(R_Instruction inst) {
@@ -92,12 +99,12 @@ void CPU::execute_r_type(R_Instruction inst) {
             break;
         case OpFunction::ADD:
             //If A, B < 0 and A + B >= 0, then exception -10
-            if((get_register(inst.src1) + get_register(inst.src2) >= 0) && ((get_register(inst.src1) && get_register(inst.src2)) < 0)) {
-                std::exit(-10);
+            if((get_register(inst.src1) + get_register(inst.src2) >= 0) && (get_register(inst.src1) < 0 && get_register(inst.src2) < 0)) {
+                throw ArithmeticError();
             }
             //If A, B > 0 and A + B <= 0, then exception -10
-            if((get_register(inst.src1) && get_register(inst.src2) > 0) && ((get_register(inst.src1) + get_register(inst.src2) <= 0))) {
-                std::exit(-10);
+            if((get_register(inst.src1) > 0 && get_register(inst.src2) > 0) && ((get_register(inst.src1) + get_register(inst.src2) <= 0))) {
+                throw ArithmeticError();
             }
             set_register(inst.dest, get_register(inst.src1) + get_register(inst.src2));
             advance_pc(4);
@@ -118,7 +125,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             break;
         case OpFunction::DIV:
             if(get_register(inst.src2) == 0) {
-                std::exit(-10);
+                throw ArithmeticError();
             }
             LO = get_register(inst.src1) / get_register(inst.src2);
             HI = get_register(inst.src1) % get_register(inst.src2);
@@ -126,7 +133,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             break;
         case OpFunction::DIVU:
             if(get_register(inst.src2) == 0) {
-                std::exit(-10);
+                throw ArithmeticError();
             }
             LO = (unsigned int) get_register(inst.src1) / (unsigned int) get_register(inst.src2);
             HI = (unsigned int) get_register(inst.src1) % (unsigned int) get_register(inst.src2);
@@ -335,12 +342,12 @@ WARNING*/
             break;
         case IOpCode::ADDI:
             //If A, B < 0 and A + B >= 0, then exception -10
-            if((get_register(inst.src) + get_register(inst.immediate) >= 0) && ((get_register(inst.src) && get_register(inst.immediate)) < 0)) {
-                std::exit(-10);
+            if((get_register(inst.src) + get_register(inst.immediate) >= 0) && (get_register(inst.src) < 0 && get_register(inst.immediate < 0))) {
+                throw ArithmeticError();
             }
             //If A, B > 0 and A + B <= 0, then exception -10
-            if((get_register(inst.src) && get_register(inst.immediate) > 0) && ((get_register(inst.src) + get_register(inst.immediate) <= 0))) {
-                std::exit(-10);
+            if((get_register(inst.src) > 0 && get_register(inst.immediate) > 0) && ((get_register(inst.src) + get_register(inst.immediate) <= 0))) {
+                throw ArithmeticError();
             }
             set_register(inst.dest, get_register(inst.src) + inst.immediate);
             advance_pc(4);
@@ -350,4 +357,14 @@ WARNING*/
             advance_pc(4);
             break;
     }
+}
+
+void run_code(std::vector<Instruction> instructions) {
+    std::vector<Word> inst_mem = {};
+    CPU cpu((std::unique_ptr<std::vector<Word>>(&inst_mem)));
+
+    for_each(instructions.begin(), instructions.end(), [&](Instruction inst) {
+        std::cout << "Executing\n";
+        cpu.execute_instruction(inst);
+    });
 }
