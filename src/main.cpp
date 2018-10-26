@@ -6,6 +6,7 @@
 #include "loader.hpp"
 #include "decoder.hpp"
 #include "cpu.hpp"
+#include "test_programs.hpp"
 
 using namespace std;
 
@@ -56,8 +57,9 @@ int main(int argc, char** argv) {
         vector<Word> instructions_bin = read_file(filename);
         CPU cpu((unique_ptr<vector<Word>>(&instructions_bin)));
         cpu.run();
+    } else {
+        run_code(divide_by_zero);
     }
-    
 
     return 0;
 }

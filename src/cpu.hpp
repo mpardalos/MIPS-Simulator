@@ -20,6 +20,8 @@ class CPU {
         void set_register(RegisterId reg, int value);
         void advance_pc(Address offset);
 
+        friend void run_code(std::vector<Instruction>);
+
     public:
         CPU(std::unique_ptr<std::vector<Word>> instructions); 
 
@@ -29,5 +31,6 @@ class CPU {
         void execute_j_type(J_Instruction);
         void execute_i_type(I_Instruction);
         void execute_REGIMM_type(REGIMM_Instruction);
-
 };
+
+void run_code(std::vector<Instruction>);
