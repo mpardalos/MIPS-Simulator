@@ -5,7 +5,6 @@ class MIPSError : public std::exception {
     public:
         std::string error_message;
         MIPSError(std::string msg) : error_message(msg) {};
-        MIPSError() : error_message("") {};
 
         virtual int get_error_code() { return -20; };
 };

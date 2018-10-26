@@ -44,3 +44,24 @@ std::vector<Instruction> divide_by_zero = {
         OpFunction::DIV, 1, 1, 0, 0
     }
 };
+
+std::vector<Instruction> overflow = {
+    I_Instruction {
+        IOpCode::ORI, 1, 1, 0xFFFF,
+    },
+    R_Instruction {
+        OpFunction::SLL, 1, 0, 1, 16
+    },
+    I_Instruction {
+        IOpCode::ORI, 1, 1, 0xFFFF,
+    },
+    I_Instruction {
+        IOpCode::ADDI, 1, 1, 1
+    }
+};
+
+std::vector<Instruction> just_addi = {
+    I_Instruction {
+        IOpCode::ADDI, 1, 1, 500
+    }
+};

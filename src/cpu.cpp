@@ -36,6 +36,9 @@ void CPU::execute_instruction(Instruction instruction) {
             [&] (REGIMM_Instruction inst) { execute_REGIMM_type(inst); }
         );
     } catch (MIPSError &err) {
+        #ifdef DEBUG 
+            std::cout << err.error_message << "\n";
+        #endif
         std::exit(err.get_error_code());
     };
 }
@@ -98,13 +101,11 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::ADD:
-            //If A, B < 0 and A + B >= 0, then exception -10
             if((get_register(inst.src1) + get_register(inst.src2) >= 0) && (get_register(inst.src1) < 0 && get_register(inst.src2) < 0)) {
-                throw ArithmeticError();
+                throw ArithmeticError("Overflow");
             }
-            //If A, B > 0 and A + B <= 0, then exception -10
             if((get_register(inst.src1) > 0 && get_register(inst.src2) > 0) && ((get_register(inst.src1) + get_register(inst.src2) <= 0))) {
-                throw ArithmeticError();
+                throw ArithmeticError("Overflow");
             }
             set_register(inst.dest, get_register(inst.src1) + get_register(inst.src2));
             advance_pc(4);
@@ -125,7 +126,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             break;
         case OpFunction::DIV:
             if(get_register(inst.src2) == 0) {
-                throw ArithmeticError();
+                throw ArithmeticError("Division by zero");
             }
             LO = get_register(inst.src1) / get_register(inst.src2);
             HI = get_register(inst.src1) % get_register(inst.src2);
@@ -133,7 +134,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             break;
         case OpFunction::DIVU:
             if(get_register(inst.src2) == 0) {
-                throw ArithmeticError();
+                throw ArithmeticError("Division by zero");
             }
             LO = (unsigned int) get_register(inst.src1) / (unsigned int) get_register(inst.src2);
             HI = (unsigned int) get_register(inst.src1) % (unsigned int) get_register(inst.src2);
@@ -233,6 +234,7 @@ void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
 }
 
 void CPU::execute_i_type(I_Instruction inst) {
+    DEBUG("executing instruction");
     switch (inst.opcode) {
         case IOpCode::LB:
             set_register(inst.dest, memory.get_byte(inst.src + inst.immediate));
@@ -341,13 +343,11 @@ WARNING*/
             advance_pc(4);
             break;
         case IOpCode::ADDI:
-            //If A, B < 0 and A + B >= 0, then exception -10
             if((get_register(inst.src) + get_register(inst.immediate) >= 0) && (get_register(inst.src) < 0 && get_register(inst.immediate < 0))) {
-                throw ArithmeticError();
+                throw ArithmeticError("Overflow");
             }
-            //If A, B > 0 and A + B <= 0, then exception -10
             if((get_register(inst.src) > 0 && get_register(inst.immediate) > 0) && ((get_register(inst.src) + get_register(inst.immediate) <= 0))) {
-                throw ArithmeticError();
+                throw ArithmeticError("Overflow");
             }
             set_register(inst.dest, get_register(inst.src) + inst.immediate);
             advance_pc(4);
@@ -360,11 +360,10 @@ WARNING*/
 }
 
 void run_code(std::vector<Instruction> instructions) {
-    std::vector<Word> inst_mem = {};
-    CPU cpu((std::unique_ptr<std::vector<Word>>(&inst_mem)));
+    auto inst_mem = std::unique_ptr<std::vector<Word>>(new std::vector<Word> {});
+    CPU cpu(std::move(inst_mem));
 
     for_each(instructions.begin(), instructions.end(), [&](Instruction inst) {
-        std::cout << "Executing\n";
         cpu.execute_instruction(inst);
     });
 }

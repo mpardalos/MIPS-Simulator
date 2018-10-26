@@ -42,8 +42,7 @@ bool Memory::is_data(Address addr) const {
  * or if it is out of bounds of the instruction and data memories.
  */
 Word Memory::get_word(Address addr) const {
-    if (addr % 4 != 0) std::exit(-11);
-        //throw invalid_argument("Word access must be word-aligned");
+    if (addr % 4 != 0) throw MemoryError("Word access must be word-aligned");
 
     if (is_instruction(addr)) {
         int inst_index = (addr - instruction_start) / 4;
@@ -56,10 +55,7 @@ Word Memory::get_word(Address addr) const {
         int data_index = (addr - data_start) / 4;
         return data_memory->at(data_index);
     } else {
-        std::exit(-11); 
-        // std::stringstream ss;
-        // ss << "Address " << addr << " is out of bounds";
-        // throw invalid_argument(ss.str());
+        throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
     }
 }
 
@@ -101,20 +97,15 @@ Byte Memory::get_byte(Address addr) const {
  * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_word(Address addr, Word value) {
-    if (addr % 4 != 0) std::exit(-11);
-        //throw invalid_argument("Word access must be word-aligned");
+    if (addr % 4 != 0) throw MemoryError("Word access must be word-aligned");
 
     if (is_instruction(addr)) {
-        throw MemoryError();
-        // throw invalid_argument("Instruction memory is read-only");
+        throw MemoryError("Instruction memory is read-only");
     } else if (is_data(addr)) {
         int data_index = (addr - data_start) / 4;
         data_memory->at(data_index) = value;
     } else {
-        throw MemoryError();
-    //     std::stringstream ss;
-    //     ss << "Address " << addr << " is out of bounds";
-    //     throw invalid_argument(ss.str());
+        throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
     }
 }
 
@@ -124,12 +115,10 @@ void Memory::write_word(Address addr, Word value) {
  * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_halfword(Address addr, Halfword value) {
-    if (addr % 2 != 0) std::exit(-11); 
-    //throw invalid_argument("Halfword access must be halfword-aligned");
+    if (addr % 2 != 0) throw MemoryError("Halfword access must be halfword-aligned"); 
 
     if (is_instruction(addr)) {
-        std::exit(-11);
-        //throw invalid_argument("Instruction memory is read-only");
+        throw MemoryError("Instruction memory is read-only");
     } else if (is_data(addr)) {
         Address data_index = (addr - data_start) / 4;
         Word current = get_word(data_index);
@@ -138,10 +127,7 @@ void Memory::write_halfword(Address addr, Halfword value) {
             ? ((Word) value << 16) | (current & 0x0000FFFF)
             : ((Word) value)       | (current & 0xFFFF0000);
     } else {
-        throw MemoryError();
-        // std::stringstream ss;
-        // ss << "Address " << addr << " is out of bounds";
-        // throw invalid_argument(ss.str());
+        throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
     }
 }
 
@@ -151,12 +137,10 @@ void Memory::write_halfword(Address addr, Halfword value) {
  * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_byte(Address addr, Byte value) {
-    if (addr % 2 != 0) std::exit(-11);
-    // throw invalid_argument("Halfword access must be halfword-aligned");
+    if (addr % 2 != 0) throw MemoryError("Halfword access must be halfword-aligned");
 
     if (is_instruction(addr)) {
-        throw MemoryError();
-        //throw invalid_argument("Instruction memory is read-only");
+        throw MemoryError("Instruction memory is read-only");
     } else if (is_data(addr)) {
         Address data_index = (addr - data_start) / 4;
         Word current = get_word(data_index);
@@ -169,9 +153,6 @@ void Memory::write_byte(Address addr, Byte value) {
 
         }
     } else {
-        throw MemoryError();
-        // std::stringstream ss;
-        // ss << "Address " << addr << " is out of bounds";
-        // throw invalid_argument(ss.str());
+        throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
     }
 }

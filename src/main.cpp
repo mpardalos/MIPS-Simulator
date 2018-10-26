@@ -7,6 +7,7 @@
 #include "decoder.hpp"
 #include "cpu.hpp"
 #include "test_programs.hpp"
+#include "debug.hpp"
 
 using namespace std;
 
@@ -58,7 +59,7 @@ int main(int argc, char** argv) {
         CPU cpu((unique_ptr<vector<Word>>(&instructions_bin)));
         cpu.run();
     } else {
-        run_code(divide_by_zero);
+        run_code(overflow); // does noooooot overflow
     }
 
     return 0;
