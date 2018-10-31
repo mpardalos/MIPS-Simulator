@@ -2,4 +2,6 @@
 
 #include <iostream>
 
-#define DEBUG(str) std::cout << "DEBUG: " << str << std::endl;
+#define DEBUG
+
+#define DEBUG_PRINT(str) std::cout << "DEBUG: " << str << std::endl;
