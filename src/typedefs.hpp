@@ -1,5 +1,4 @@
-#ifndef TYPEDEFS_HPP
-#define TYPEDEFS_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -9,5 +8,3 @@ using RegisterId = uint8_t;
 using Word       = uint32_t;
 using Byte       = uint8_t;
 using Halfword   = uint16_t;
-
-#endif

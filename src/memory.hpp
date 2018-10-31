@@ -1,5 +1,4 @@
-#ifndef RUNTIME_HPP
-#define RUNTIME_HPP
+#pragma once
 
 #include <iostream>
 #include <array>
@@ -47,5 +46,3 @@ class Memory {
         void write_halfword(Address, Halfword);
 
 };
-
-#endif
