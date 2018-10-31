@@ -36,6 +36,20 @@ bool Memory::is_data(Address addr) const {
 }
 
 /**
+ * Check if and address is within data memory
+ */
+bool Memory::is_getc(Address addr) const {
+    return addr >= 0x30000000 && addr < 0x30000004;
+}
+
+/**
+ * Check if and address is within data memory
+ */
+bool Memory::is_putc(Address addr) const {
+    return addr >= 0x30000004 && addr < 0x30000008;
+}
+
+/**
  * Get a word (4 bytes) from memory.
  *
  * Throws std::invalid_argument if the address is not word-aligned (i.e. it refers to a byte)
@@ -54,6 +68,12 @@ Word Memory::get_word(Address addr) const {
     } else if (is_data(addr)) {
         int data_index = (addr - data_start) / 4;
         return data_memory->at(data_index);
+    } else if (is_putc(addr)) {
+        throw MemoryError("Can't read from putc address");
+    } else if (is_getc(addr)) {
+        char input;
+        cin >> input;
+        return static_cast<Word>(input);
     } else {
         throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
     }
@@ -97,6 +117,7 @@ Byte Memory::get_byte(Address addr) const {
  * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_word(Address addr, Word value) {
+    DEBUG("accessing " << to_string(addr));
     if (addr % 4 != 0) throw MemoryError("Word access must be word-aligned");
 
     if (is_instruction(addr)) {
@@ -104,6 +125,10 @@ void Memory::write_word(Address addr, Word value) {
     } else if (is_data(addr)) {
         int data_index = (addr - data_start) / 4;
         data_memory->at(data_index) = value;
+    } else if (is_putc(addr)) {
+        cout << static_cast<char>(value & 0xFF);
+    } else if (is_getc(addr)) {
+        throw MemoryError("Can't write to getc address");
     } else {
         throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
     }

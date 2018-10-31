@@ -31,6 +31,7 @@ class CPU {
         void execute_j_type(J_Instruction);
         void execute_i_type(I_Instruction);
         void execute_REGIMM_type(REGIMM_Instruction);
+        void execute_Special_type(Special_Instruction);
 };
 
 void run_code(std::vector<Instruction>);

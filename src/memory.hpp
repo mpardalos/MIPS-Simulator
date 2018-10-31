@@ -31,8 +31,9 @@ class Memory {
         const std::unique_ptr<std::vector<Word>> data_memory;
 
         bool is_instruction(Address addr) const;
-
         bool is_data(Address addr) const;
+        bool is_putc(Address addr) const;
+        bool is_getc(Address addr) const;
 
     public:
         Memory(std::unique_ptr<std::vector<Word>> i_instruction_memory);

@@ -16,7 +16,7 @@ check:
 	$(CXX) $(CPPFLAGS) -fsyntax-only $(src) $(headers)
 
 .PHONY: clean run
-run:
+run: build
 	@$(DIST)/$(ARTIFACTNAME)
 
 clean:

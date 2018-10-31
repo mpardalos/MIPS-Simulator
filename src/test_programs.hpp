@@ -18,7 +18,7 @@ std::vector<Instruction> add_and_print = {
         IOpCode::ORI, 11, 11, 0b11
     },
     R_Instruction {
-        OpFunction::SLL, 11, 0, 11, 28
+        OpFunction::SLL, 11, 0, 11, 30
     },
 
     // $1 = 10
@@ -64,4 +64,29 @@ std::vector<Instruction> just_addi = {
     I_Instruction {
         IOpCode::ADDI, 1, 1, 500
     }
+};
+
+std::vector<Instruction> print_A = {
+    R_Instruction {
+        OpFunction::JR, 0, 0, 0, 0
+    },
+    // Load getc onto $11
+    // getc: 110000000000000000000000000000
+    I_Instruction {
+        IOpCode::ORI, 11, 11, 0b11
+    },
+    Special_Instruction {
+        SpecialOpcode::REGDUMP
+    },
+    R_Instruction {
+        OpFunction::SLL, 11, 0, 11, 28
+    },
+    // Store the char 'A' in $1
+    I_Instruction {
+        IOpCode::ORI, 1, 1, 65
+    },
+    // print $1
+    I_Instruction {
+        IOpCode::SW, 11, 1, 4
+    },
 };

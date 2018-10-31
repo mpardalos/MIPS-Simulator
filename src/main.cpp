@@ -48,8 +48,6 @@ void memtest() {
     }
 }
 
-
-
 int main(int argc, char** argv) {
     if (argc >= 2 && string(argv[1]) == string("-memtest")) {
         memtest();
@@ -59,7 +57,7 @@ int main(int argc, char** argv) {
         CPU cpu((unique_ptr<vector<Word>>(&instructions_bin)));
         cpu.run();
     } else {
-        run_code(overflow); // does noooooot overflow
+        run_code(print_A);
     }
 
     return 0;

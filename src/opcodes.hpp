@@ -88,11 +88,8 @@ enum class OpFunction {
     AND,     //   Bitwise and [..] Func 0b100100 or 36
 };
 
-enum class SpecialOpCode {
-    INTERNAL,//   Not associated with a specific instruction
-    FUNCTION,//   Testing the ability to support functions
-    STACK    //   Testing for functions using the stack
-
+enum class SpecialOpcode {
+    REGDUMP
 };
 
 struct R_Instruction {
@@ -127,6 +124,10 @@ struct J_Instruction {
     Address address;
 };
 
-typedef mapbox::util::variant<R_Instruction, I_Instruction, J_Instruction, REGIMM_Instruction> Instruction;
+struct Special_Instruction {
+    SpecialOpcode opcode;
+};
+
+typedef mapbox::util::variant<R_Instruction, I_Instruction, J_Instruction, REGIMM_Instruction, Special_Instruction> Instruction;
 
 #endif

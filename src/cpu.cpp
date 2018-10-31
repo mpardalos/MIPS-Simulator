@@ -3,7 +3,9 @@
 #include "cpu.hpp"
 #include "exceptions.hpp"
 
-CPU::CPU(std::unique_ptr<std::vector<Word>> instructions) : memory(std::move(instructions)) {}
+CPU::CPU(std::unique_ptr<std::vector<Word>> instructions) : 
+    memory(std::move(instructions)),
+    registers() {}
 
 int CPU::get_register(RegisterId reg) const {
     if (reg == 0) { return 0; }
@@ -22,7 +24,12 @@ void CPU::advance_pc(Address offset) {
 
 void CPU::run() {
     while (true) {
-        Instruction inst = decode(memory.get_word(PC));
+        if (PC == 0) break;
+
+        Word inst_bin = memory.get_word(PC);
+        if (inst_bin == 0) continue;
+
+        Instruction inst = decode(inst_bin);
         execute_instruction(inst);
     }
 }
@@ -30,10 +37,11 @@ void CPU::run() {
 void CPU::execute_instruction(Instruction instruction) {
     try {
         instruction.match(
-            [&] (R_Instruction      inst) {      execute_r_type(inst); },
-            [&] (I_Instruction      inst) {      execute_i_type(inst); },
-            [&] (J_Instruction      inst) {      execute_j_type(inst); },
-            [&] (REGIMM_Instruction inst) { execute_REGIMM_type(inst); }
+            [&] (R_Instruction       inst) {      execute_r_type(inst); },
+            [&] (I_Instruction       inst) {      execute_i_type(inst); },
+            [&] (J_Instruction       inst) {      execute_j_type(inst); },
+            [&] (REGIMM_Instruction  inst) { execute_REGIMM_type(inst); },
+            [&] (Special_Instruction inst) { execute_Special_type(inst); }
         );
     } catch (MIPSError &err) {
         #ifdef DEBUG 
@@ -41,6 +49,18 @@ void CPU::execute_instruction(Instruction instruction) {
         #endif
         std::exit(err.get_error_code());
     };
+}
+
+void CPU::execute_Special_type(Special_Instruction inst) {
+    switch (inst.opcode) {
+        case SpecialOpcode::REGDUMP:
+            std::cout << "PC:\t"  << std::to_string(PC)  << std::endl;
+            std::cout << "nPC:\t" << std::to_string(nPC) << std::endl;
+            for (int i = 0; i <= 31; i++) {
+                std::cout << "$" << i << ":\t" << std::to_string(get_register(i)) << std::endl;
+            }
+            break;
+    }
 }
 
 void CPU::execute_r_type(R_Instruction inst) {
@@ -57,7 +77,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             nPC = get_register(inst.src1);
             break;
         case OpFunction::SLL:
-            set_register(inst.dest, (unsigned int) get_register(inst.src2) << (unsigned int) get_register(inst.shift));
+            set_register(inst.dest, get_register(inst.src2) << inst.shift);
             advance_pc(4);
             break;
         case OpFunction::SLLV:
@@ -65,7 +85,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::SRA:
-            set_register(inst.dest, (int) get_register(inst.src2) >> (int) get_register(inst.shift));
+            set_register(inst.dest, (int) get_register(inst.src2) >> (int) inst.shift);
             advance_pc(4);
             break;
         case OpFunction::SRAV:
@@ -73,7 +93,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::SRL:
-            set_register(inst.dest, (unsigned int) get_register(inst.src2) >> (unsigned int) get_register(inst.shift));
+            set_register(inst.dest, (unsigned int) get_register(inst.src2) >> (unsigned int) inst.shift);
             advance_pc(4);
             break;
         case OpFunction::SRLV:
@@ -234,7 +254,6 @@ void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
 }
 
 void CPU::execute_i_type(I_Instruction inst) {
-    DEBUG("executing instruction");
     switch (inst.opcode) {
         case IOpCode::LB:
             set_register(inst.dest, memory.get_byte(inst.src + inst.immediate));
@@ -278,7 +297,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             advance_pc(4);
             break;
         case IOpCode::SW:
-            memory.write_word(inst.dest+inst.immediate, get_register(inst.src));
+            memory.write_word(get_register(inst.dest)+inst.immediate, get_register(inst.src));
             advance_pc(4);
             break;
 /* WARNING
@@ -363,7 +382,8 @@ void run_code(std::vector<Instruction> instructions) {
     auto inst_mem = std::unique_ptr<std::vector<Word>>(new std::vector<Word> {});
     CPU cpu(std::move(inst_mem));
 
-    for_each(instructions.begin(), instructions.end(), [&](Instruction inst) {
-        cpu.execute_instruction(inst);
-    });
+    for (auto inst = instructions.begin(); inst < instructions.end(); inst++) {
+        if (cpu.PC == 0) break;
+        cpu.execute_instruction(*inst);
+    }
 }
