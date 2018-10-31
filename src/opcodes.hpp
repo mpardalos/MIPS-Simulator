@@ -1,8 +1,12 @@
-#ifndef OPCODES_HPP
-#define OPCODES_HPP
+#pragma once
+
+#include <string>
 
 #include "mapbox/variant.hpp"
 #include "typedefs.hpp"
+#include "show.hpp"
+
+using namespace std;
 
 enum class JOpCode {
     J,       //   Jump
@@ -41,7 +45,6 @@ enum class IOpCode {
     // Arithmetic
     ADDI,    //   Add immediate (with overflow) [..] 0b001000 or 8
     ADDIU,   //   Add immediate unsigned (no overflow) [..] 0b001001 or 9
-
 };
 
 enum class REGIMMCode {
@@ -50,6 +53,7 @@ enum class REGIMMCode {
     BLTZ, // Branch on less than zero (0b00000)
     BLTZAL, // Branch on less than zero and link (0b10000) 
 };
+
 
 enum class OpFunction {
     // Jumps
@@ -102,6 +106,7 @@ struct R_Instruction {
     unsigned short int shift;
 };
 
+
 struct I_Instruction {
     IOpCode opcode;
 
@@ -130,4 +135,14 @@ struct Special_Instruction {
 
 typedef mapbox::util::variant<R_Instruction, I_Instruction, J_Instruction, REGIMM_Instruction, Special_Instruction> Instruction;
 
-#endif
+template<> std::string show(const JOpCode&            );
+template<> std::string show(const IOpCode&            );
+template<> std::string show(const OpFunction&         );
+template<> std::string show(const REGIMMCode&         );
+template<> std::string show(const SpecialOpcode&      );
+template<> std::string show(const R_Instruction&      );
+template<> std::string show(const I_Instruction&      );
+template<> std::string show(const J_Instruction&      );
+template<> std::string show(const REGIMM_Instruction& );
+template<> std::string show(const Special_Instruction&);
+template<> std::string show(const Instruction&        );
