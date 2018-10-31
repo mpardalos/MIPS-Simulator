@@ -6,6 +6,8 @@
 
 #include "opcodes.hpp"
 #include "debug.hpp"
+#include "exceptions.hpp"
+#include "show.hpp"
 
 using namespace std;
 
@@ -51,7 +53,7 @@ R_Instruction decode_R_type(unsigned int word) {
         case 0b100100: func = OpFunction::AND; break;
 
         default: 
-            throw invalid_argument(string("Could not match function code ") + to_string(opcode_bin));
+            throw InvalidInstructionError("Could not match function code " + show(opcode_bin));
             break;
     }
 
@@ -91,7 +93,7 @@ I_Instruction decode_I_type(unsigned int word) {
         case 0b001001: opcode = IOpCode::ADDIU; break;   //   Add immediate unsigned (no overflow) [..] 0b001001 or 9
 
         default: 
-            throw invalid_argument(string("Could not match i type opcode ") + to_string(opcode_bin));
+            throw InvalidInstructionError("Could not match i type opcode " + show(opcode_bin));
             break;
     }
     
@@ -107,7 +109,7 @@ J_Instruction decode_J_type(unsigned int word) {
         case 2: opcode = JOpCode::J; break;
         case 3: opcode = JOpCode::JAL; break;   
         default: 
-            throw invalid_argument(string("Could not match j type opcode ") + to_string(opcode_bin));
+            throw InvalidInstructionError("Could not match j type opcode " + show(opcode_bin));
             break;
     }
     
@@ -126,7 +128,7 @@ REGIMM_Instruction decode_REGIMM(Word word) {
         case 0b00000: code = REGIMMCode::BLTZ; break;
         case 0b10000: code = REGIMMCode::BLTZAL; break;
         default: 
-            throw invalid_argument(string("Could not match REGIMM code ") + to_string(regimm_code_bin));
+            throw InvalidInstructionError("Could not match REGIMM code " + show(regimm_code_bin));
             break;
     }
 
@@ -146,10 +148,7 @@ Instruction decode(unsigned int word) {
             return decode_REGIMM(word);
         case 2: case 3: 
             return decode_J_type(word);
-        case 4:
+        default:
             return decode_I_type(word);
-        default: 
-        // Invalid Instruction (Opcode cannot be found)
-            std::exit(-12);
     }
 }

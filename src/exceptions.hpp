@@ -15,12 +15,14 @@ class ArithmeticError : public MIPSError {
     public:
         using MIPSError::MIPSError;
         inline int get_error_code() override { return -10; };
-} ;
+};
+
 class MemoryError : public MIPSError {
     public:
         using MIPSError::MIPSError;
         inline int get_error_code() override { return -11; };
 };
+
 class InvalidInstructionError : public MIPSError {
     public:
         using MIPSError::MIPSError;

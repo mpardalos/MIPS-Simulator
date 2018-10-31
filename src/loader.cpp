@@ -12,7 +12,7 @@ unique_ptr<vector<Word>> read_file(string filename) {
     ifstream istream(filename, ios::binary);
 
     if (!istream.is_open()) {
-        throw invalid_argument(string("Could not open") + filename);
+        throw invalid_argument(string("Could not open: ") + filename);
     }
 
     unique_ptr<vector<Word>> result(new vector<Word>());
