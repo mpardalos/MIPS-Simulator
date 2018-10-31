@@ -25,7 +25,7 @@ Memory::Memory(
  * Check if and address is within instruction memory
  */
 bool Memory::is_instruction(Address addr) const {
-    return addr > instruction_start && addr < (instruction_start+instruction_size);
+    return addr >= instruction_start && addr < (instruction_start+instruction_size);
 }
 
 /**
@@ -117,7 +117,7 @@ Byte Memory::get_byte(Address addr) const {
  * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_word(Address addr, Word value) {
-    DEBUG("accessing " << to_string(addr));
+    DEBUG_PRINT("mem(" << to_string(addr) << ") = " << to_string(value))
     if (addr % 4 != 0) throw MemoryError("Word access must be word-aligned");
 
     if (is_instruction(addr)) {
