@@ -2,7 +2,7 @@ CXX=clang++
 
 ARTIFACTNAME=out
 DIST=dist
-CPPFLAGS=-I include/ -Wall -std=c++11
+CPPFLAGS=-I include/ -Wall -Wextra -pedantic -Wno-c++14-binary-literal -std=c++11
 
 src=$(wildcard src/*.cpp)
 headers=$(wildcard src/*.hpp)

@@ -59,7 +59,7 @@ Word Memory::get_word(Address addr) const {
     if (addr % 4 != 0) throw MemoryError("Word access must be word-aligned");
 
     if (is_instruction(addr)) {
-        int inst_index = (addr - instruction_start) / 4;
+        unsigned int inst_index = (addr - instruction_start) / 4;
         if (inst_index >= instruction_memory->size()) {
             return 0;
         } else {
