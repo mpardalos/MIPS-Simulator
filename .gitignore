@@ -35,11 +35,8 @@
 *.app
 
 # Output directory
-dist/
+bin/
 
 # compiled assembly files
 *.bin
-
-# Ignored for now
-testbench/
-assembly/
+*.elf

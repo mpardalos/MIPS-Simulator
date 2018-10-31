@@ -1,23 +1,67 @@
 CXX=clang++
+SIMULATOR_BIN_NAME=mips_simulator
+DIST=bin
 
-ARTIFACTNAME=out
-DIST=dist
+.PHONY: clean run testbench
+
+# --------------- Simulator --------------- 
+
 CPPFLAGS=-I include/ -Wall -Wextra -pedantic -Wno-c++14-binary-literal -std=c++11
-
 src=$(wildcard src/*.cpp)
 headers=$(wildcard src/*.hpp)
 objects=$(src:.cpp=.o)
 
-build: $(objects)
+simulator: $(objects)
 	mkdir -p $(DIST)
-	$(CXX) $(LINKOPTS) -o $(DIST)/$(ARTIFACTNAME) $^
+	$(CXX) $(LINKOPTS) -o $(DIST)/$(SIMULATOR_BIN_NAME) $^
 
 check:
 	$(CXX) $(CPPFLAGS) -fsyntax-only $(src) $(headers)
 
-.PHONY: clean run
-run: build
+# --------------- Testbench --------------- 
+LINK_SCRIPT=testbench/linker.ld
+MIPS_AS = mips-linux-gnu-as
+MIPS_LD = mips-linux-gnu-ld
+MIPS_OBJCOPY = mips-linux-gnu-objcopy
+MIPS_OBJDUMP = mips-linux-gnu-objdump
+MIPS_ASFLAGS = -W -Wall -O3 -march=mips1 -mfp32 -mabi=32
+MIPS_LDFLAGS = -nostdlib -melf32btsmip --gpsize=0 -static -Bstatic --build-id=none
+
+testsrc=$(wildcard testbench/tests/*.s)
+testobjects=$(testsrc:.s=.mips.o)
+testelf=$(testsrc:.s=.mips.elf)
+testbins=$(testsrc:.s=.mips.bin)
+.PRECIOUS: $(testelf)
+
+tests: $(testbins)
+
+testbench: tests
+	mkdir -p $(DIST)/tests
+	cp -r testbench/mips_testbench $(DIST)
+	cp -r $(testbins) $(DIST)/tests
+	cp -r testbench/tests/*.output $(DIST)/tests
+	cp -r testbench/tests/*.error $(DIST)/tests
+
+# Assemble MIPS assembly file (.s) into MIPS object file (.o)
+%.mips.o: %.s
+	$(MIPS_AS) $(MIPS_ASFLAGS) $< -o $@
+
+# Link MIPS object file (.o), producing .elf, using memory locations specified in spec
+%.mips.elf: %.mips.o
+	$(MIPS_LD) $(MIPS_LDFLAGS) -T $(LINK_SCRIPT) $< -o $@
+
+# Extract binary instructions only from linked object file (.elf)
+%.mips.bin: %.mips.elf
+	$(MIPS_OBJCOPY) -O binary --only-section=.text $< $@
+
+# --------------- Helpers --------------- 
+
+run: simulator
 	@$(DIST)/$(ARTIFACTNAME)
 
 clean:
-	rm -rf $(objects) $(DIST)
+	rm -rf $(objects) $(testobjects) $(testelf) $(testbins) $(DIST)
+
+rebuild: 
+	$(MAKE) clean
+	$(MAKE) build

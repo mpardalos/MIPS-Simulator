@@ -1,0 +1,26 @@
+#!/bin/bash
+
+SIMULATOR=$1
+
+function get_expected_output() {
+   cat $(echo $1 | sed 's/.mips.bin/.output/g')
+}
+
+function get_expected_error() {
+    cat $(echo $1 | sed 's/.mips.bin/.error/g')
+}
+
+for testbin in $(ls tests | grep -E *.mips.bin); do
+    expected_output=$(get_expected_output tests/$testbin)
+    expected_error=$(get_expected_error tests/$testbin)
+
+    echo -e "Running $testbin"
+
+    echo -e "Expecting output:\t $expected_output"
+    output=$($SIMULATOR tests/$testbin)
+    echo -e "Got output:\t $output"
+
+    echo -e "Expecting errorcode:\t $expected_error"
+    returncode=$?
+    echo -e "Got error:\t $returncode"
+done
