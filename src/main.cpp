@@ -8,6 +8,7 @@
 #include "cpu.hpp"
 #include "test_programs.hpp"
 #include "debug.hpp"
+#include "exceptions.hpp"
 
 using namespace std;
 
@@ -53,8 +54,8 @@ int main(int argc, char** argv) {
         memtest();
     } else if (argc >= 2) {
         auto filename = argv[1];
-        vector<Word> instructions_bin = read_file(filename);
-        CPU cpu((unique_ptr<vector<Word>>(&instructions_bin)));
+        auto instructions_bin = read_file(filename);
+        CPU cpu(move(instructions_bin));
         cpu.run();
     } else {
         run_code(print_A);
