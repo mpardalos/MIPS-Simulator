@@ -2,6 +2,7 @@
 
 #include "cpu.hpp"
 #include "exceptions.hpp"
+#include "opcodes.hpp"
 
 CPU::CPU(std::unique_ptr<std::vector<Word>> instructions) : 
     memory(std::move(instructions)),
@@ -36,6 +37,7 @@ void CPU::run() {
 
 void CPU::execute_instruction(Instruction instruction) {
     try {
+        DEBUG_PRINT("executing: " << show(instruction))
         instruction.match(
             [&] (R_Instruction       inst) {      execute_r_type(inst); },
             [&] (I_Instruction       inst) {      execute_i_type(inst); },
@@ -272,7 +274,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             advance_pc(4);
             break;
         case IOpCode::LUI:
-            set_register(inst.dest, (inst.immediate << 16));
+            set_register(inst.dest, (get_register(inst.dest) | (inst.immediate << 16)));
             advance_pc(4);
             break;
         case IOpCode::LW:
@@ -285,19 +287,19 @@ void CPU::execute_i_type(I_Instruction inst) {
             advance_pc(4);
             break;
         case IOpCode::LWR: 
-            set_register(inst.dest, (memory.get_byte(inst.immediate + inst.src) & 0x00FF) | (get_register(inst.dest) & 0xFF00));
+            set_register(inst.dest, (memory.get_byte(inst.immediate + get_register(inst.src)) & 0x00FF) | (get_register(inst.dest) & 0xFF00));
             advance_pc(4);
             break;
         case IOpCode::SB:
-            memory.write_byte(inst.dest+inst.immediate, get_register(inst.src) & 0xFF);
+            memory.write_byte(get_register(inst.src)+inst.immediate, get_register(inst.src) & 0xFF);
             advance_pc(4);
             break;
         case IOpCode::SH:
-            memory.write_halfword(inst.dest+inst.immediate, get_register(inst.src) & 0xFFFF);
+            memory.write_halfword(get_register(inst.src)+inst.immediate, get_register(inst.src) & 0xFFFF);
             advance_pc(4);
             break;
         case IOpCode::SW:
-            memory.write_word(get_register(inst.dest)+inst.immediate, get_register(inst.src));
+            memory.write_word(get_register(inst.src)+inst.immediate, get_register(inst.dest));
             advance_pc(4);
             break;
 /* WARNING

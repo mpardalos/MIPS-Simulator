@@ -8,6 +8,7 @@
 #include "typedefs.hpp"
 #include "memory.hpp"
 #include "exceptions.hpp"
+#include "show.hpp"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ using namespace std;
 // can modify it.
 Memory::Memory(
         unique_ptr<vector<Word>> i_instruction_memory) :
-    instruction_memory(std::move(i_instruction_memory)),
+    instruction_memory(move(i_instruction_memory)),
     data_memory(new vector<Word>(data_size, 0)) {
         assert (instruction_start+(instruction_memory->size()*4) <= data_start);
     }
@@ -52,7 +53,7 @@ bool Memory::is_putc(Address addr) const {
 /**
  * Get a word (4 bytes) from memory.
  *
- * Throws std::invalid_argument if the address is not word-aligned (i.e. it refers to a byte)
+ * Throws invalid_argument if the address is not word-aligned (i.e. it refers to a byte)
  * or if it is out of bounds of the instruction and data memories.
  */
 Word Memory::get_word(Address addr) const {
@@ -75,14 +76,14 @@ Word Memory::get_word(Address addr) const {
         cin >> input;
         return static_cast<Word>(input);
     } else {
-        throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
+        throw MemoryError("Address " + show(as_hex(addr)) + " is out of bounds");
     }
 }
 
 /**
  * Get a halfword from memory.
  *
- * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
+ * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 Halfword Memory::get_halfword(Address addr) const {
     // Gets the word to which the byte belongs
@@ -98,7 +99,7 @@ Halfword Memory::get_halfword(Address addr) const {
 /**
  * Get a byte from memory.
  *
- * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
+ * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 Byte Memory::get_byte(Address addr) const {
     // Gets the word to which the byte belongs
@@ -114,10 +115,10 @@ Byte Memory::get_byte(Address addr) const {
 /**
  * Write a word to memory
  *
- * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
+ * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_word(Address addr, Word value) {
-    DEBUG_PRINT("mem(" << to_string(addr) << ") = " << to_string(value))
+    DEBUG_PRINT("mem(" << show(as_hex(addr)) << ") = " << show(value))
     if (addr % 4 != 0) throw MemoryError("Word access must be word-aligned");
 
     if (is_instruction(addr)) {
@@ -130,14 +131,14 @@ void Memory::write_word(Address addr, Word value) {
     } else if (is_getc(addr)) {
         throw MemoryError("Can't write to getc address");
     } else {
-        throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
+        throw MemoryError("Address " + show(as_hex(addr)) + " is out of bounds");
     }
 }
 
 /**
  * Write a word to memory
  *
- * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
+ * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_halfword(Address addr, Halfword value) {
     if (addr % 2 != 0) throw MemoryError("Halfword access must be halfword-aligned"); 
@@ -152,14 +153,14 @@ void Memory::write_halfword(Address addr, Halfword value) {
             ? ((Word) value << 16) | (current & 0x0000FFFF)
             : ((Word) value)       | (current & 0xFFFF0000);
     } else {
-        throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
+        throw MemoryError("Address " + show(as_hex(addr)) + " is out of bounds");
     }
 }
 
 /**
  * Write a word to memory
  *
- * Throws std::invalid_argument if the address is out of bounds of the instruction and data memories.
+ * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_byte(Address addr, Byte value) {
     if (addr % 2 != 0) throw MemoryError("Halfword access must be halfword-aligned");
@@ -178,6 +179,6 @@ void Memory::write_byte(Address addr, Byte value) {
 
         }
     } else {
-        throw MemoryError("Address " + std::to_string(addr) + " is out of bounds");
+        throw MemoryError("Address " + show(as_hex(addr)) + " is out of bounds");
     }
 }

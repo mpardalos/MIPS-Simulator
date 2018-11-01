@@ -64,4 +64,4 @@ clean:
 
 rebuild: 
 	$(MAKE) clean
-	$(MAKE) build
+	$(MAKE)

@@ -92,8 +92,9 @@ template<>
 string show(const R_Instruction& inst) {
     return show(inst.function) 
         + "(src1: " + show(inst.src1) + ", "
-        +  "src2: " + show(inst.src1) + ", "
-        +  "dest: " + show(inst.src1) + ")";
+        +  "src2: " + show(inst.src2) + ", "
+        +  "dest: " + show(inst.dest) + ", "
+        +  "shift: " + show(inst.shift) + ")";
 }
 
 template<> std::string show(const I_Instruction& inst) {
