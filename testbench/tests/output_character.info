@@ -1,0 +1,5 @@
+author: mp5617
+instruction: sw
+message: Checking putc
+output: A
+exit_code: 0

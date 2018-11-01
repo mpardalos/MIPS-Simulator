@@ -3,6 +3,7 @@ SIMULATOR_BIN_NAME=mips_simulator
 DIST=bin
 
 .PHONY: clean run testbench
+.DEFAULT_GOAL := all
 
 # --------------- Simulator --------------- 
 
@@ -24,23 +25,26 @@ MIPS_AS = mips-linux-gnu-as
 MIPS_LD = mips-linux-gnu-ld
 MIPS_OBJCOPY = mips-linux-gnu-objcopy
 MIPS_OBJDUMP = mips-linux-gnu-objdump
-MIPS_ASFLAGS = -W -Wall -O3 -march=mips1 -mfp32 -mabi=32
+MIPS_ASFLAGS = -march=mips1 -mfp32 -mabi=32
 MIPS_LDFLAGS = -nostdlib -melf32btsmip --gpsize=0 -static -Bstatic --build-id=none
 
 testsrc=$(wildcard testbench/tests/*.s)
 testobjects=$(testsrc:.s=.mips.o)
 testelf=$(testsrc:.s=.mips.elf)
 testbins=$(testsrc:.s=.mips.bin)
-.PRECIOUS: $(testelf)
+
+testbench_script=testbench/mips_testbench
 
 tests: $(testbins)
 
-testbench: tests
+testbench: tests $(testbench_script)
 	mkdir -p $(DIST)/tests
 	cp -r testbench/mips_testbench $(DIST)
 	cp -r $(testbins) $(DIST)/tests
-	cp -r testbench/tests/*.output $(DIST)/tests
-	cp -r testbench/tests/*.error $(DIST)/tests
+	cp -r testbench/tests/*.info $(DIST)/tests
+
+test: testbench simulator $(testbench)
+	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME)
 
 # Assemble MIPS assembly file (.s) into MIPS object file (.o)
 %.mips.o: %.s
@@ -58,6 +62,8 @@ testbench: tests
 
 run: simulator
 	@$(DIST)/$(ARTIFACTNAME)
+
+all: simulator testbench
 
 clean:
 	rm -rf $(objects) $(testobjects) $(testelf) $(testbins) $(DIST)

@@ -2,6 +2,11 @@
 
 #include <iostream>
 
-#define DEBUG
+// #define DEBUG
 
-#define DEBUG_PRINT(str) std::cout << "DEBUG: " << str << std::endl;
+#ifdef DEBUG
+#   define DEBUG_PRINT(str) std::cerr << "DEBUG: " << str << std::endl;
+#else
+#   define DEBUG_PRINT(str) do {} while (0);
+#endif
+

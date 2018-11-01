@@ -1,26 +1,43 @@
 #!/bin/bash
 
 SIMULATOR=$1
+TESTS_DIR=bin/tests
 
-function get_expected_output() {
-   cat $(echo $1 | sed 's/.mips.bin/.output/g')
+function info_file() {
+    echo $1 | sed 's/\..*$/.info/g'
 }
 
-function get_expected_error() {
-    cat $(echo $1 | sed 's/.mips.bin/.error/g')
-}
+for testbin in $(find $TESTS_DIR | grep -E *.mips.bin); do
+    infofile=$(info_file $testbin)
 
-for testbin in $(ls tests | grep -E *.mips.bin); do
-    expected_output=$(get_expected_output tests/$testbin)
-    expected_error=$(get_expected_error tests/$testbin)
+    if ! [[ -f $infofile ]]; then
+        (echo "$testbin is missing an info file!" 1>&2)
+        continue
+    fi
 
-    echo -e "Running $testbin"
+    # Extract all fields from the info file
+    # the `sed` command is used first to select lines from a file and 
+    # then to select parts of that line
+    test_id=$testbin
+    author=$(sed -n '/^author:/p' $infofile  | sed 's/^author:\s*//g')
+    message=$(sed -n '/^message:/p' $infofile | sed 's/^message:\s*//g')
+    instruction=$(sed -n '/^instruction:/p' $infofile | sed 's/^instruction:\s*//g')
+    expected_out=$(sed -n '/^output:/p' $infofile | sed 's/^output:\s*//g')
+    [ -z expected_out ] && expected_out = ''
+    expected_exit_code=$(sed -n '/^exit_code:/p' $infofile | sed 's/^exit_code:\s*//g')
+    [ -z expected_exit_code ] && expected_exit_code = '0'
 
-    echo -e "Expecting output:\t $expected_output"
-    output=$($SIMULATOR tests/$testbin)
-    echo -e "Got output:\t $output"
+    # Run binary and capture exit code and output
+    out=$($SIMULATOR $testbin)
+    exit_code=$?
 
-    echo -e "Expecting errorcode:\t $expected_error"
-    returncode=$?
-    echo -e "Got error:\t $returncode"
+    # If the exit code and output match what was expected, the test passes
+    if [ "$out" = "$expected_out" ] && [ "$exit_code" = "$expected_exit_code" ]; then
+        pass='Pass'
+    else 
+        pass='Fail'
+    fi
+
+    echo "$test_id, $instruction, $pass, $author, $message"
+
 done

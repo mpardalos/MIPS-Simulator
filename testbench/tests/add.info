@@ -1,0 +1,5 @@
+author: mp5617
+instruction: addi
+message: addi works
+output: 
+exit_code: 0
