@@ -71,9 +71,7 @@ int main(int argc, char** argv) {
     } else if (argc >= 3 && string(argv[1]) == string("-decode")) {
         decode_and_dump(argv[2]);
     } else if (argc >= 2) {
-        auto filename = argv[1];
-        auto instructions_bin = read_file(filename);
-        CPU cpu(move(instructions_bin));
+        CPU cpu(read_file(argv[1]));
         cpu.run();
     } else {
         run_code(getcharacter);
