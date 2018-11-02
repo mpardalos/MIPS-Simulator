@@ -1,4 +1,5 @@
 #include <string>
+#include <bitset>
 #include <sstream>
 
 #include "show.hpp"
@@ -18,5 +19,10 @@ template<> string show( const unsigned short& val     ) { return to_string(val);
 template<> string show( const as_hex& val             ) { 
     ostringstream ss;
     ss << "0x" << hex << val.val;
+    return ss.str();
+}
+template<> string show( const as_bin& val             ) { 
+    ostringstream ss;
+    ss << "0b" << bitset<32>(val.val);
     return ss.str();
 }

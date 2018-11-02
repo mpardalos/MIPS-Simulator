@@ -9,6 +9,11 @@ struct as_hex {
     inline as_hex(unsigned int ival): val(ival) {};
 };
 
+struct as_bin { 
+    unsigned int val; 
+    inline as_bin(unsigned int ival): val(ival) {};
+};
+
 // Replicate all to_string functionstemplate<> std::string show( const long& val               ) { return std::to_string(val); };
 template<> std::string show( const long long& val          );
 template<> std::string show( const unsigned& val           );
@@ -21,4 +26,5 @@ template<> std::string show( const unsigned char& val      );
 template<> std::string show( const short& val              );
 template<> std::string show( const unsigned short& val     );
 template<> std::string show( const as_hex& val);
+template<> std::string show( const as_bin& val);
 

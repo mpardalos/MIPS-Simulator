@@ -55,8 +55,13 @@ void memtest() {
 void decode_and_dump(string filename) {
     auto instructions_bin = read_file(filename);
 
-    for (auto inst_bin = instructions_bin->begin(); inst_bin < instructions_bin->end(); inst_bin++) {
-        cout << show(decode(*inst_bin)) << endl;
+    try {
+        for (auto inst_bin = instructions_bin->begin(); inst_bin < instructions_bin->end(); inst_bin++) {
+            cout << show(decode(*inst_bin)) << endl;
+        }
+    } catch (MIPSError &err) {
+        cout << err.error_message << endl;
+        exit(err.get_error_code());
     }
 }
 

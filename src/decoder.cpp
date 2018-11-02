@@ -53,7 +53,7 @@ R_Instruction decode_R_type(unsigned int word) {
         case 0b100100: func = OpFunction::AND; break;
 
         default: 
-            throw InvalidInstructionError("Could not match function code " + show(opcode_bin));
+            throw InvalidInstructionError("Could not match function code " + show(as_bin(opcode_bin)));
             break;
     }
 
@@ -93,7 +93,7 @@ I_Instruction decode_I_type(unsigned int word) {
         case 0b001001: opcode = IOpCode::ADDIU; break;   //   Add immediate unsigned (no overflow) [..] 0b001001 or 9
 
         default: 
-            throw InvalidInstructionError("Could not match i type opcode " + show(opcode_bin));
+            throw InvalidInstructionError("Could not match i type opcode " + show(as_bin(opcode_bin)));
             break;
     }
     
@@ -109,7 +109,7 @@ J_Instruction decode_J_type(unsigned int word) {
         case 2: opcode = JOpCode::J; break;
         case 3: opcode = JOpCode::JAL; break;   
         default: 
-            throw InvalidInstructionError("Could not match j type opcode " + show(opcode_bin));
+            throw InvalidInstructionError("Could not match j type opcode " + show(as_bin(opcode_bin)));
             break;
     }
     
@@ -128,10 +128,9 @@ REGIMM_Instruction decode_REGIMM(Word word) {
         case 0b00000: code = REGIMMCode::BLTZ; break;
         case 0b10000: code = REGIMMCode::BLTZAL; break;
         default: 
-            throw InvalidInstructionError("Could not match REGIMM code " + show(regimm_code_bin));
+            throw InvalidInstructionError("Could not match REGIMM code " + show(as_bin(regimm_code_bin)));
             break;
     }
-
     return REGIMM_Instruction { code, src, offset };
 }
 
