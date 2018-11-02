@@ -47,24 +47,39 @@ std::vector<Instruction> divide_by_zero = {
 
 std::vector<Instruction> overflow = {
     I_Instruction {
-        IOpCode::ORI, 1, 1, 0xFFFF,
+        IOpCode::ORI, 1, 1, short (0xFFFF),
     },
     R_Instruction {
         OpFunction::SLL, 1, 0, 1, 16
     },
     I_Instruction {
-        IOpCode::ORI, 1, 1, 0xFFFF,
+        IOpCode::ORI, 1, 1, short (0xFFFF),
     },
     I_Instruction {
         IOpCode::ADDI, 1, 1, 1
     }
 };
 
+std::vector<Instruction> add_negative = {
+    I_Instruction {
+        IOpCode::ADDI, 1, 1, 6
+    },
+    I_Instruction {
+        IOpCode::ADDI, 2, 2, -8
+    },
+    R_Instruction {
+        OpFunction::ADD, 1, 2, 1, 0
+    },
+    Special_Instruction {
+        SpecialOpcode::REGDUMP
+    },
+};
+
 std::vector<Instruction> getcharacter = {
     // Load getc onto $11
     // getc: 110000000000000000000000000000
     I_Instruction {
-        IOpCode::ORI, 11, 11, 0b11
+        IOpCode::ORI, 11, 11, 3
     },
     R_Instruction {
         OpFunction::SLL, 11, 0, 11, 28

@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
         CPU cpu(move(instructions_bin));
         cpu.run();
     } else {
-        run_code(print_A);
+        run_code(getcharacter);
     }
 
     return 0;
