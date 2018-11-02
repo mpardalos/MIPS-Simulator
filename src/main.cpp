@@ -49,9 +49,22 @@ void memtest() {
     }
 }
 
+/**
+ *  Decode filename and print all the decoded instructions to stdout
+ */
+void decode_and_dump(string filename) {
+    auto instructions_bin = read_file(filename);
+
+    for (auto inst_bin = instructions_bin->begin(); inst_bin < instructions_bin->end(); inst_bin++) {
+        cout << show(decode(*inst_bin)) << endl;
+    }
+}
+
 int main(int argc, char** argv) {
     if (argc >= 2 && string(argv[1]) == string("-memtest")) {
         memtest();
+    } else if (argc >= 3 && string(argv[1]) == string("-decode")) {
+        decode_and_dump(argv[2]);
     } else if (argc >= 2) {
         auto filename = argv[1];
         auto instructions_bin = read_file(filename);
