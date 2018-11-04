@@ -3,5 +3,3 @@ instruction: add2
 message: Add 6 + -8
 output: -2 
 exit_code: 0
-
-THROWS INVALID INSTRUCTION

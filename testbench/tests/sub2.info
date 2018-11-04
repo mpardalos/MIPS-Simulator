@@ -1,0 +1,5 @@
+author: em2717
+instruction: sub2
+message: subtraction with a negative and a positive
+output:  -5
+exit_code: 0

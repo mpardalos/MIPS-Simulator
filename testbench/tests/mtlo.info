@@ -1,0 +1,5 @@
+author: em2717
+instruction: mtlo
+message: storing 5 in LO
+output: 
+exit_code: 0

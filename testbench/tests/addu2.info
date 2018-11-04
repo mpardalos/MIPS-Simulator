@@ -1,0 +1,5 @@
+author: em2717
+instruction: addu2
+message: add unsigned 50 + 10
+output: 60
+exit_code: 0

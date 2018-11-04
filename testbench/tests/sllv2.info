@@ -1,0 +1,5 @@
+author: em2717
+instruction: sllv2
+message: Shifting -5 by 2
+output: -10 
+exit_code: 0

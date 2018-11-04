@@ -1,0 +1,5 @@
+author: em2717
+instruction: division by positive
+message: 28 / 4
+output: 7
+exit_code: 0

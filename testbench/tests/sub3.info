@@ -1,0 +1,5 @@
+author: em2717
+instruction: sub3
+message: subtraction with two positive
+output:  95
+exit_code: 0

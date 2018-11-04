@@ -1,0 +1,5 @@
+author: em2717
+instruction: subu3
+message: 1 positive, 1 negative minus
+output: -101
+exit_code: 0

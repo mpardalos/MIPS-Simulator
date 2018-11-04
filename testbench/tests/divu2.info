@@ -1,0 +1,5 @@
+author: em2717
+instruction: division by negative 
+message: -98 / 4
+output: 24
+exit_code: 0

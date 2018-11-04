@@ -1,0 +1,5 @@
+author: em2717
+instruction: multu3
+message: Multiply 0xA0000000 by 0xA0000000
+output: 0x6400000000000000 
+exit_code: 0
