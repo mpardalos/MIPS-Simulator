@@ -67,12 +67,14 @@ void CPU::execute_Special_type(Special_Instruction inst) {
 
 void CPU::execute_r_type(R_Instruction inst) {
     switch (inst.function) {
-/* WARNING
- If next instruction is another branch or jump, throw an exception
- WARNING*/
         case OpFunction::JALR:
-            set_register(31, PC);
-            nPC = get_register(inst.src1);
+            if(get_register(inst.src2) == 0) {
+                set_register(31, PC);
+                nPC = get_register(inst.src1);
+            } else {
+                set_register(get_register(inst.src2), PC);
+                nPC = get_register(inst.src1);
+            }
             break;
         case OpFunction::JR:
             PC = nPC;
@@ -137,8 +139,12 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::SUB:
-            //if(A, B < 0 AND dest[31] = 0 then arithmetic exception)
-            //if((get_register(inst.src1) && get_register(inst.src2)) < 0) &&
+            if((get_register(inst.src1) - get_register(inst.src2) >= 0) && (get_register(inst.src1) < 0 && get_register(inst.src2) >= 0)) {
+                throw ArithmeticError("Overflow");
+            }
+            if((get_register(inst.src1) >= 0 && get_register(inst.src2) < 0) && ((get_register(inst.src1) - get_register(inst.src2) < 0))) {
+                throw ArithmeticError("Overflow");
+            }
             set_register(inst.dest, get_register(inst.src1) - get_register(inst.src2));
             advance_pc(4);
             break;
@@ -179,11 +185,15 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::MULT:
-            LO = get_register(inst.src1) * get_register(inst.src2);
+            int64_t product = get_register(inst.src1) * get_register(inst.src2);
+            LO = product & 0xFFFFFFFF;
+            HI = static_cast<uint64_t> (product) >> 32;
             advance_pc(4);
             break;
         case OpFunction::MULTU:
-            LO = (unsigned int) get_register(inst.src1) * (unsigned int) get_register(inst.src2);
+            uint64_t product = (unsigned int) get_register(inst.src1) * (unsigned int) get_register(inst.src2);
+            LO = product & 0xFFFFFFFF;
+            HI = product >> 32;
             advance_pc(4);
             break;
         case OpFunction::XOR:
@@ -201,9 +211,7 @@ void CPU::execute_r_type(R_Instruction inst) {
         default: break;
     }
 }
-/* WARNING
- If next instruction is another branch or jump, throw an exception
- WARNING*/
+
  void CPU::execute_j_type(J_Instruction inst) {
     switch (inst.opcode) {
         case JOpCode::J:
@@ -217,9 +225,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             break;
     }
 }
-/* WARNING
- If next instruction is another branch or jump, throw an exception
- WARNING*/
+
 void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
     switch (inst.code) {
         case REGIMMCode::BGEZ:
