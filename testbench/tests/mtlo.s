@@ -1,5 +1,5 @@
 .set noat
 .text
-    ADDI $1, $1, 5 
-    MTLO $1 
-    JR $0
+    addi $1, $1, 5 
+    mtlo $1 
+    jr $0

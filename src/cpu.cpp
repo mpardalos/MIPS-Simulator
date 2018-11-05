@@ -184,18 +184,20 @@ void CPU::execute_r_type(R_Instruction inst) {
             LO = get_register(inst.src1);
             advance_pc(4);
             break;
-        case OpFunction::MULT:
+        case OpFunction::MULT: {
             Product product = get_register(inst.src1) * get_register(inst.src2);
             LO = product & 0xFFFFFFFF;
             HI = (product >> 32) & 0xFFFFFFFF;
             advance_pc(4);
             break;
-        case OpFunction::MULTU:
+        }
+        case OpFunction::MULTU: {
             U_Product product = (unsigned int) get_register(inst.src1) * (unsigned int) get_register(inst.src2);
             LO = product & 0xFFFFFFFF;
             HI = (product >> 32) & 0xFFFFFFFF;
             advance_pc(4);
             break;
+        }
         case OpFunction::XOR:
             set_register(inst.dest, get_register(inst.src1) ^ get_register(inst.src2));
             advance_pc(4);
@@ -204,15 +206,16 @@ void CPU::execute_r_type(R_Instruction inst) {
             set_register(inst.dest, get_register(inst.src1) | get_register(inst.src2));
             advance_pc(4);
             break;
-        case OpFunction::AND:
+        case OpFunction::AND: {
             set_register(inst.dest, get_register(inst.src1) & get_register(inst.src2));
             advance_pc(4);
             break;
+        }
         default: break;
     }
 }
 
- void CPU::execute_j_type(J_Instruction inst) {
+void CPU::execute_j_type(J_Instruction inst) {
     switch (inst.opcode) {
         case JOpCode::J:
             PC = nPC;

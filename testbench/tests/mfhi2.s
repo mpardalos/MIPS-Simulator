@@ -1,7 +1,7 @@
-.set noat
+# .set noat
 .text
-    ADDI $1, $1, 30 
-    ADDI $2, $2, -4
-    DIV $1, $1, $2
-    MFHI $3 
-    JR $0
+    addi $2, $2, 30 
+    addi $3, $3, -4
+    div $2, $3
+    mfhi $4 
+    jr $0
