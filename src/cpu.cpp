@@ -185,13 +185,13 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::MULT:
-            int64_t product = get_register(inst.src1) * get_register(inst.src2);
+            Product product = get_register(inst.src1) * get_register(inst.src2);
             LO = product & 0xFFFFFFFF;
-            HI = static_cast<uint64_t> (product) >> 32;
+            HI = (product >> 32) & 0xFFFFFFFF;
             advance_pc(4);
             break;
         case OpFunction::MULTU:
-            uint64_t product = (unsigned int) get_register(inst.src1) * (unsigned int) get_register(inst.src2);
+            U_Product product = (unsigned int) get_register(inst.src1) * (unsigned int) get_register(inst.src2);
             LO = product & 0xFFFFFFFF;
             HI = product >> 32;
             advance_pc(4);
