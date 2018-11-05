@@ -1,6 +1,5 @@
-.set noat 
 .text 
-    ADDI $1, $1, 100 
-    ADDI $2, $2, -150
-    MULTU $2, $1
-    JR $0 
+    addi $t1, $t1, 100 
+    addi $t2, $t2, -150
+    multu $t2, $t1
+    jr $0 

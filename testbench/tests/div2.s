@@ -1,6 +1,5 @@
-.set noat
 .text
-    ADDI $1, $1, -98 
-    ADDI $2, $2, 4
-    # DIV $1, $1, $2 
-    JR $0
+    addi $t1, $t1, -98 
+    addi $t2, $t2, 4
+    div $t1, $t2 
+    jr $0

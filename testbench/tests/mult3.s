@@ -1,10 +1,9 @@
-.set noat 
 .text 
-    ADDI $1, $1, 5
-    SLL $1, $1, 29 
-    ADDI $2, $2, -10
-    SLL $2, $2, 28
-    MULT $2, $1
-    JR $0 
+    addi $t1, $t1, 5
+    sll $t1, $t1, 29 
+    addi $t2, $t2, -10
+    sll $t2, $t2, 28
+    mult $t2, $t1
+    jr $0 
 
 

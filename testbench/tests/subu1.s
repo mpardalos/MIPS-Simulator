@@ -1,6 +1,5 @@
-.set noat
 .text
-    addi $1, $1, 150
-    addi $2, $2, 49
-    subu $1, $1, $2
+    addi $t1, $t1, 150
+    addi $t2, $t2, 49
+    subu $t1, $t1, $t2
     jr $0

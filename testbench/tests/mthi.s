@@ -1,5 +1,4 @@
-.set noat
 .text
-    ADDI $1, $1, 10 
-    MTHI $1 
-    JR $0
+    addi $t1, $t1, 10 
+    mthi $t1 
+    jr $0
