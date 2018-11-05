@@ -193,7 +193,7 @@ void CPU::execute_r_type(R_Instruction inst) {
         case OpFunction::MULTU:
             U_Product product = (unsigned int) get_register(inst.src1) * (unsigned int) get_register(inst.src2);
             LO = product & 0xFFFFFFFF;
-            HI = product >> 32;
+            HI = (product >> 32) & 0xFFFFFFFF;
             advance_pc(4);
             break;
         case OpFunction::XOR:
