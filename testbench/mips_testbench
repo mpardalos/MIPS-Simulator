@@ -27,6 +27,8 @@ for testbin in $(find $TESTS_DIR | grep -E *.mips.bin); do
     expected_exit_code=$(sed -n '/^exit_code:/p' $infofile | sed 's/^exit_code:\s*//g')
     [ -z expected_exit_code ] && expected_exit_code = '0'
 
+    printf "$test_id, $instruction, "
+
     # Run binary and capture exit code and output
     out=$($SIMULATOR $testbin)
     exit_code=$?
@@ -38,6 +40,6 @@ for testbin in $(find $TESTS_DIR | grep -E *.mips.bin); do
         pass='Fail'
     fi
 
-    echo "$test_id, $instruction, $pass, $author, $message"
+    echo "$pass, $author, $message"
 
 done
