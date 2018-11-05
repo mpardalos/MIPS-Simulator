@@ -1,0 +1,5 @@
+author: mp5617
+instruction: lui
+message: mostly checks assembler
+output: 
+exit_code: 0
