@@ -138,7 +138,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::ADDU:
-            set_register(inst.dest, (unsigned int) get_register(inst.src2) + (unsigned int) get_register(inst.src1));
+            set_register(inst.dest, get_register(inst.src2) + get_register(inst.src1));
             advance_pc(4);
             break;
         case OpFunction::SUB:
@@ -152,7 +152,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::SUBU:
-            set_register(inst.dest, (unsigned int) get_register(inst.src1) - (unsigned int) get_register(inst.src2));
+            set_register(inst.dest, get_register(inst.src1) - get_register(inst.src2));
             advance_pc(4);
             break;
         case OpFunction::DIV:
@@ -167,8 +167,8 @@ void CPU::execute_r_type(R_Instruction inst) {
             if(get_register(inst.src2) == 0) {
                 throw ArithmeticError("Division by zero");
             }
-            LO = (unsigned int) get_register(inst.src1) / (unsigned int) get_register(inst.src2);
-            HI = (unsigned int) get_register(inst.src1) % (unsigned int) get_register(inst.src2);
+            LO = get_register(inst.src1) / get_register(inst.src2);
+            HI = get_register(inst.src1) % get_register(inst.src2);
             advance_pc(4);
             break;
         case OpFunction::MFHI:
@@ -195,7 +195,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             break;
         }
         case OpFunction::MULTU: {
-            U_Product product = (unsigned int) get_register(inst.src1) * (unsigned int) get_register(inst.src2);
+            U_Product product = static_cast<U_Product>(get_register(inst.src1)) * static_cast<U_Product>(get_register(inst.src2));
             LO = product & 0xFFFFFFFF;
             HI = (product >> 32) & 0xFFFFFFFF;
             advance_pc(4);
