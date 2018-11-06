@@ -1,11 +1,16 @@
-Build executable in dist/:
+Build executable in bin/:
 ```
-make build
+make simulator
 ```
 
-Run it:
+Build testbench in bin/:
 ```
-make run
+make testbench
+```
+
+run all tests
+```
+make test
 ```
 
 Clean everything:
