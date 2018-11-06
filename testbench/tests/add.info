@@ -1,5 +1,5 @@
 author: mp5617
 instruction: add
-message: add works
+message: add doesn't crash
 output:
 exit_code: 0

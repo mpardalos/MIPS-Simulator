@@ -1,5 +1,5 @@
 author: em2717
 instruction: addu3
-message: positive overflow
+message: Positive overflow allowed
 output: 
 exit_code: 0

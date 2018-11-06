@@ -1,5 +1,5 @@
 author: em2717
 instruction: add2
-message: Add (-6) + (-8)
-output: -14 
+message: negative + negative
+output: V
 exit_code: 0
