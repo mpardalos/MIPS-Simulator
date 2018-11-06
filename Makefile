@@ -1,4 +1,4 @@
-CXX=clang++
+CXX=g++
 SIMULATOR_BIN_NAME=mips_simulator
 DIST=bin
 
@@ -32,6 +32,7 @@ testsrc=$(wildcard testbench/tests/*.s)
 testobjects=$(testsrc:.s=.mips.o)
 testelf=$(testsrc:.s=.mips.elf)
 testbins=$(testsrc:.s=.mips.bin)
+.PRECIOUS: $(testelf)
 
 testbench_script=testbench/mips_testbench
 
