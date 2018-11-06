@@ -1,5 +1,5 @@
 author: mp5617
-instruction: addi
-message: addi works
-output: 
+instruction: add
+message: add works
+output:
 exit_code: 0

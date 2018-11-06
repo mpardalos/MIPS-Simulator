@@ -1,5 +1,5 @@
 author: em2717
 instruction: add1
-message: Add 5 + 5
-output: 10 
+message: Add 50 + 15
+output: A
 exit_code: 0

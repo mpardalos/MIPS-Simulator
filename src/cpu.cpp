@@ -311,9 +311,6 @@ void CPU::execute_i_type(I_Instruction inst) {
             memory.write_word(get_register(inst.src)+inst.immediate, get_register(inst.dest));
             advance_pc(4);
             break;
-/* WARNING
-If next instruction is another branch or jump, throw an exception
-WARNING*/
         case IOpCode::BEQ:
             if(get_register(inst.src) == get_register(inst.dest)) {
                 advance_pc(inst.immediate << 2);
