@@ -23,21 +23,26 @@ void CPU::advance_pc(Address offset) {
     nPC += offset;
 }
 
-void CPU::run() {
+void CPU::run() { run(false); }
+
+void CPU::run(bool trace) {
     while (true) {
         if (PC == 0) break;
 
         Word inst_bin = memory.get_word(PC);
-        if (inst_bin == 0) continue;
+        if (inst_bin == 0) {
+            advance_pc(4);
+            continue;
+        }
 
         Instruction inst = decode(inst_bin);
+        if (trace) cout << show(inst) << endl;
         execute_instruction(inst);
     }
 }
 
 void CPU::execute_instruction(Instruction instruction) {
     try {
-        DEBUG_PRINT("executing: " << show(instruction))
         instruction.match(
             [&] (R_Instruction       inst) {      execute_r_type(inst); },
             [&] (I_Instruction       inst) {      execute_i_type(inst); },
@@ -46,9 +51,7 @@ void CPU::execute_instruction(Instruction instruction) {
             [&] (Special_Instruction inst) { execute_Special_type(inst); }
         );
     } catch (MIPSError &err) {
-        #ifdef DEBUG 
-            std::cout << err.error_message << "\n";
-        #endif
+        cerr << err.error_message << endl;
         std::exit(err.get_error_code());
     };
 }

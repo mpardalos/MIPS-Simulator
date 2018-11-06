@@ -18,11 +18,14 @@ for testbin in $(find $TESTS_DIR | grep -E *.mips.bin); do
     # Extract all fields from the info file
     # the `sed` command is used first to select lines from a file and 
     # then to select parts of that line
-    test_id=$testbin
+    
+    test_filename=${testbin##*/}
+    test_id=${test_filename%%.mips.bin}
     author=$(sed -n '/^author:/p' $infofile  | sed 's/^author:\s*//g' | tr -d '\n' )
     message=$(sed -n '/^message:/p' $infofile | sed 's/^message:\s*//g' | tr -d '\n' )
     instruction=$(sed -n '/^instruction:/p' $infofile | sed 's/^instruction:\s*//g' | tr -d '\n' )
     expected_out=$(sed -n '/^output:/p' $infofile | sed 's/^output:\s*//g' | tr -d '\n' )
+
     [ -z expected_out ] && expected_out = ''
     expected_exit_code=$(sed -n '/^exit_code:/p' $infofile | sed 's/^exit_code:\s*//g' | tr -d '\n' )
     [ -z expected_exit_code ] && expected_exit_code = '0'

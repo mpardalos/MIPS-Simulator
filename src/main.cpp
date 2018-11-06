@@ -60,21 +60,23 @@ void decode_and_dump(string filename) {
             cout << show(decode(*inst_bin)) << endl;
         }
     } catch (MIPSError &err) {
-        cout << err.error_message << endl;
+        cerr << err.what() << endl;
         exit(err.get_error_code());
     }
 }
 
 int main(int argc, char** argv) {
-    if (argc >= 2 && string(argv[1]) == string("-memtest")) {
+    if (argc >= 2 && string(argv[1]) == string("memtest")) {
         memtest();
-    } else if (argc >= 3 && string(argv[1]) == string("-decode")) {
+    } else if (argc >= 3 && string(argv[1]) == string("decode")) {
         decode_and_dump(argv[2]);
     } else if (argc >= 2) {
-        CPU cpu(read_file(argv[1]));
-        cpu.run();
+        bool trace = (argc >= 3 && argv[1] == string("trace"));
+        CPU cpu(read_file(argv[argc-1]));
+        cpu.run(trace);
     } else {
-        run_code(getcharacter);
+        cerr << "Not enough arguments" << endl;
+        exit(1);
     }
 
     return 0;

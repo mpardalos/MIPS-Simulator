@@ -1,6 +1,5 @@
-.set noat
 .text
-    addi $1, $1, 5
-    addi $2, $2, 2
-    sllv $1, $1, $2
+    addi $t1, $t1, 5
+    addi $t2, $t2, 2
+    sllv $t1, $t1, $t2
     jr $0

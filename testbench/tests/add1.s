@@ -1,4 +1,3 @@
-.set noat
 .text
     addi $t1, $t1, 50
     addi $t2, $t2, 15
