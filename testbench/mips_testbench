@@ -7,7 +7,7 @@ function info_file() {
     echo $1 | sed 's/\..*$/.info/g'
 }
 
-for testbin in $(find $TESTS_DIR | grep -E *.mips.bin); do
+for testbin in $(find $TESTS_DIR | grep -E *.mips.bin | sort); do
     infofile=$(info_file $testbin)
 
     if ! [[ -f $infofile ]]; then
