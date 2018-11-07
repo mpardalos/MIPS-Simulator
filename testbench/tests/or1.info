@@ -1,5 +1,5 @@
 author: em2717
-instruction: or1
-message: OR 5 and -15
-output: -11
+instruction: or positives
+message: or 
+output: A
 exit_code: 0

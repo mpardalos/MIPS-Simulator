@@ -1,4 +1,5 @@
 author: mp5617
 instruction: ori
-message: store positive and negative
+message: store constant
+output: A
 exit_code: 0

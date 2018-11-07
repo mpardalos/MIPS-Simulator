@@ -1,5 +1,5 @@
-author: em2717
-instruction: sllv1
-message: Shifting 5 by 2
-output: 10 
+author: mp5617
+instruction: sllv
+message: Left shifting positive
+output: @
 exit_code: 0
