@@ -1,5 +1,5 @@
-author: em2717
-instruction: mult3
-message: Multiply 0xA0000000 by 0x60000000
-output: 0x3200000000000000
+author: mp5617
+instruction: mult
+message: (-34)x5=-170
+output: V
 exit_code: 0

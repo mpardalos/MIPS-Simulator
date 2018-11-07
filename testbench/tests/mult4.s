@@ -1,6 +1,6 @@
 .text 
-    li $t1, -34
-    li $t2, 5
+    li $t1, -22
+    li $t2, -3
 
     mult $t2, $t1
     mflo $t1

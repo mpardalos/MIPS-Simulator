@@ -1,5 +1,5 @@
 author: mp5617
 instruction: mult
-message: 34x(-5)=-170
-output: V
+message: (-22)x(-3)=66
+output: B
 exit_code: 0

@@ -1,5 +1,5 @@
 author: em2717
-instruction: mult1
-message: Multiply 10 by -5
-output: -50 
+instruction: mult
+message: 22x3=66
+output: B
 exit_code: 0

@@ -1,5 +1,5 @@
 author: em2717
-instruction: multu1
-message: Multiply 100 by 150
-output: 15000 
+instruction: multu
+message: Negative times negative is positive
+output: l 
 exit_code: 0
