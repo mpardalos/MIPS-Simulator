@@ -7,7 +7,8 @@ DIST=bin
 
 # --------------- Simulator --------------- 
 
-CPPFLAGS=-I include/ -Wall -Wextra -Wno-c++14-binary-literal -std=c++11
+DEBUG_FLAGS=-DDEBUG -DBREAK_IS_REGDUMP
+CPPFLAGS=-I include/ -Wall -Wextra -Wno-c++14-binary-literal -std=c++11 $(DEBUG_FLAGS)
 src=$(wildcard src/*.cpp)
 headers=$(wildcard src/*.hpp)
 objects=$(src:.cpp=.o)

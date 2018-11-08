@@ -135,19 +135,23 @@ REGIMM_Instruction decode_REGIMM(Word word) {
 }
 
 /**
- * This should return Instruction
+ * Decode an instruction.
+ * 
+ * Special case: decodes BREAK to a REGDUMP if compiled with BREAK_IS_REGDUMP
  */
 Instruction decode(unsigned int word) {
     unsigned short int opcode = get_opcode(word); 
 
+    #ifdef BREAK_IS_REGDUMP
+    if (opcode == 0 && (word & 0x3F) == 13) {
+        return Special_Instruction{ SpecialOpcode::REGDUMP };
+    }
+    #endif
+
     switch (opcode) {
-        case 0: 
-            return decode_R_type(word);
-        case 1:
-            return decode_REGIMM(word);
-        case 2: case 3: 
-            return decode_J_type(word);
-        default:
-            return decode_I_type(word);
+        case 0:         return decode_R_type(word);
+        case 1:         return decode_REGIMM(word);
+        case 2: case 3: return decode_J_type(word);
+        default:        return decode_I_type(word);
     }
 }
