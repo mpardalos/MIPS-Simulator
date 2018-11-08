@@ -25,13 +25,13 @@ for testbin in $(find $TESTS_DIR | grep -E *.mips.bin | sort); do
     message=$(sed -n '/^message:/p' $infofile | sed 's/^message:\s*//g' | tr -d '\n\r' )
     instruction=$(sed -n '/^instruction:/p' $infofile | sed 's/^instruction:\s*//g' | tr -d '\n\r' )
     expected_out=$(sed -n '/^output:/p' $infofile | sed 's/^output:\s*//g' | tr -d '\n\r' )
+    input=$(sed -n '/^input:/p' $infofile | sed 's/^input:\s*//g' | tr -d '\n\r' )
 
-    [ -z expected_out ] && expected_out = ''
     expected_exit_code=$(sed -n '/^exit_code:/p' $infofile | sed 's/^exit_code:\s*//g' | tr -d '\n\r' )
-    [ -z expected_exit_code ] && expected_exit_code = '0'
+    [ "$expected_exit_code" == "" ] && expected_exit_code=0
 
     # Run binary and capture exit code and output
-    out=$($SIMULATOR $testbin)
+    out=$(echo $input | $SIMULATOR $testbin)
     exit_code=$?
 
     # If the exit code and output match what was expected, the test passes
