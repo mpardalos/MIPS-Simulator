@@ -73,10 +73,10 @@ int main(int argc, char** argv) {
     } else if (argc >= 2) {
         bool trace = (argc >= 3 && argv[1] == string("trace"));
         CPU cpu(read_file(argv[argc-1]));
-        cpu.run(trace);
+        uint8_t exit_code = cpu.run(trace);
+        exit(exit_code);
     } else {
         cerr << "Not enough arguments" << endl;
-        exit(1);
     }
 
     return 0;

@@ -23,9 +23,9 @@ void CPU::advance_pc(Address offset) {
     nPC += offset;
 }
 
-void CPU::run() { run(false); }
+uint8_t CPU::run() { return run(false); }
 
-void CPU::run(bool trace) {
+uint8_t CPU::run(bool trace) {
     while (true) {
         if (PC == 0) break;
 
@@ -39,6 +39,7 @@ void CPU::run(bool trace) {
         if (trace) cout << show(inst) << endl;
         execute_instruction(inst);
     }
+    return get_register(2) & 0xFF;
 }
 
 void CPU::execute_instruction(Instruction instruction) {

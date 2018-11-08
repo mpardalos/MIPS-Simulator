@@ -27,8 +27,8 @@ class CPU {
     public:
         CPU(std::unique_ptr<std::vector<Word>> instructions); 
 
-        void run();
-        void run(bool trace = false);
+        uint8_t run();
+        uint8_t run(bool trace = false);
         void execute_instruction(Instruction instruction);
         void execute_r_type(R_Instruction inst);
         void execute_j_type(J_Instruction);
