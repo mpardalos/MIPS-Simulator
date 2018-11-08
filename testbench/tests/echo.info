@@ -1,0 +1,5 @@
+author: mp5617
+instruction: sw
+message: echo stdin until ~
+input: abcdef~
+output: abcdef
