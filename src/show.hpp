@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "typedefs.hpp"
+
 template<typename T> std::string show(const T& val);
 
 struct as_hex { 
@@ -27,4 +29,5 @@ template<> std::string show( const short& val              );
 template<> std::string show( const unsigned short& val     );
 template<> std::string show( const as_hex& val);
 template<> std::string show( const as_bin& val);
+template<> std::string show( const RegisterId& val);
 

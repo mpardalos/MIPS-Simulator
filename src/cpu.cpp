@@ -8,12 +8,14 @@ CPU::CPU(std::unique_ptr<std::vector<Word>> instructions) :
     memory(std::move(instructions)),
     registers() {}
 
-int CPU::get_register(RegisterId reg) const {
+int CPU::get_register(RegisterId regId) const {
+    uint8_t reg = regId.value;
     if (reg == 0) { return 0; }
     else          { return registers[reg-1]; };
 };
 
-void CPU::set_register(RegisterId reg, int value) {
+void CPU::set_register(RegisterId regId, int value) {
+    uint8_t reg = regId.value;
     if (reg == 0) { return; }
     else          { registers[reg-1] = value; }
 }
@@ -39,7 +41,7 @@ uint8_t CPU::run(bool trace) {
         if (trace) cout << show(inst) << endl;
         execute_instruction(inst);
     }
-    return get_register(2) & 0xFF;
+    return get_register(RegisterId{2}) & 0xFF;
 }
 
 void CPU::execute_instruction(Instruction instruction) {
@@ -62,9 +64,10 @@ void CPU::execute_Special_type(Special_Instruction inst) {
         case SpecialOpcode::REGDUMP:
             std::cout << "PC:\t"  << std::to_string(PC)  << std::endl;
             std::cout << "nPC:\t" << std::to_string(nPC) << std::endl;
-            for (int i = 0; i <= 31; i++) {
-                std::cout << "$" << i << ":\t" << std::to_string(get_register(i)) << std::endl;
+            for (uint8_t i = 0; i <= 31; i++) {
+                std::cout << "$" << i << ":\t" << std::to_string(get_register(RegisterId{i})) << std::endl;
             }
+            advance_pc(4);
             break;
     }
 }
@@ -73,10 +76,10 @@ void CPU::execute_r_type(R_Instruction inst) {
     switch (inst.function) {
         case OpFunction::JALR:
             if(get_register(inst.src2) == 0) {
-                set_register(31, PC);
+                set_register(rRA, PC);
                 nPC = get_register(inst.src1);
             } else {
-                set_register(get_register(inst.src2), PC);
+                set_register(inst.src2, PC);
                 nPC = get_register(inst.src1);
             }
             break;
@@ -226,7 +229,7 @@ void CPU::execute_j_type(J_Instruction inst) {
             nPC = (PC & 0xF0000000) | (inst.address << 2);
             break;
         case JOpCode::JAL:
-            set_register(31, PC + 8);
+            set_register(rRA, PC + 8);
             PC = nPC;
             nPC = (PC & 0xF0000000) | (inst.address << 2);
             break;
@@ -244,7 +247,7 @@ void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
             break;
         case REGIMMCode::BGEZAL:
             if(get_register(inst.src) >= 0) {
-                set_register(31, PC + 8);
+                set_register(rRA, PC + 8);
                 advance_pc(inst.offset << 2);
             } else {
                 advance_pc(4);
@@ -259,7 +262,7 @@ void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
             break;
         case REGIMMCode::BLTZAL:
             if(get_register(inst.src) < 0) {
-                set_register(31, PC + 8);
+                set_register(rRA, PC + 8);
                 advance_pc(inst.offset << 2);
             } else {
                 advance_pc(4);
@@ -271,19 +274,19 @@ void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
 void CPU::execute_i_type(I_Instruction inst) {
     switch (inst.opcode) {
         case IOpCode::LB:
-            set_register(inst.dest, memory.get_byte(inst.src + inst.immediate));
+            set_register(inst.dest, memory.get_byte(get_register(inst.src) + inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::LBU:
-            set_register( (unsigned int) inst.dest, memory.get_byte( (unsigned int) inst.src + inst.immediate));
+            set_register(inst.dest, (unsigned int) memory.get_byte(get_register(inst.src) + inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::LH:
-            set_register(inst.dest, memory.get_halfword(inst.src + inst.immediate));
+            set_register(inst.dest, memory.get_halfword(get_register(inst.src) + inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::LHU:
-            set_register( (unsigned int) inst.dest, memory.get_halfword( (unsigned int) inst.src + inst.immediate));
+            set_register(inst.dest, (unsigned int) memory.get_halfword(get_register(inst.src) + inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::LUI:
@@ -296,7 +299,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             break;
         case IOpCode::LWL:
             //Gets the first 8 bits of the word and replaces it the first 8 bits in the dest reg
-            set_register(inst.dest, (memory.get_byte(inst.immediate + inst.src) & 0xFF00) | (get_register(inst.dest) & 0x00FF));
+            set_register(inst.dest, (memory.get_byte(inst.immediate + get_register(inst.src)) & 0xFF00) | (get_register(inst.dest) & 0x00FF));
             advance_pc(4);
             break;
         case IOpCode::LWR: 
@@ -304,11 +307,11 @@ void CPU::execute_i_type(I_Instruction inst) {
             advance_pc(4);
             break;
         case IOpCode::SB:
-            memory.write_byte(get_register(inst.src)+inst.immediate, get_register(inst.src) & 0xFF);
+            memory.write_byte(get_register(inst.src)+inst.immediate, get_register(inst.dest) & 0xFF);
             advance_pc(4);
             break;
         case IOpCode::SH:
-            memory.write_halfword(get_register(inst.src)+inst.immediate, get_register(inst.src) & 0xFFFF);
+            memory.write_halfword(get_register(inst.src)+inst.immediate, get_register(inst.dest) & 0xFFFF);
             advance_pc(4);
             break;
         case IOpCode::SW:
@@ -374,10 +377,10 @@ void CPU::execute_i_type(I_Instruction inst) {
             advance_pc(4);
             break;
         case IOpCode::ADDI:
-            if((get_register(inst.src) + get_register(inst.immediate) >= 0) && (get_register(inst.src) < 0 && get_register(inst.immediate < 0))) {
+            if((get_register(inst.src) + inst.immediate >= 0) && (get_register(inst.src) < 0 && inst.immediate < 0)) {
                 throw ArithmeticError("Overflow");
             }
-            if((get_register(inst.src) > 0 && get_register(inst.immediate) > 0) && ((get_register(inst.src) + get_register(inst.immediate) <= 0))) {
+            if((get_register(inst.src) > 0 && inst.immediate > 0) && ((get_register(inst.src) + inst.immediate <= 0))) {
                 throw ArithmeticError("Overflow");
             }
             set_register(inst.dest, get_register(inst.src) + inst.immediate);

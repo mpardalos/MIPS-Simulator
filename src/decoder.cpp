@@ -17,9 +17,9 @@ R_Instruction decode_R_type(unsigned int word) {
     unsigned short int opcode_bin = get_opcode(word);
     if (opcode_bin != 0) { exit(1); }
 
-    RegisterId src1 = (word & 0x03E00000) >> 21;
-    RegisterId src2 = (word & 0x001F0000) >> 16;
-    RegisterId dest = (word & 0x0000F800) >> 11;
+    RegisterId src1 = RegisterId { static_cast<uint8_t>((word & 0x03E00000) >> 21) };
+    RegisterId src2 = RegisterId { static_cast<uint8_t>((word & 0x001F0000) >> 16) };
+    RegisterId dest = RegisterId { static_cast<uint8_t>((word & 0x0000F800) >> 11) };
     unsigned short int shft = (word & 0x000007C0) >>  6;
     unsigned short int func_bin = (word & 0x0000003F);
 
@@ -62,8 +62,8 @@ R_Instruction decode_R_type(unsigned int word) {
 
 I_Instruction decode_I_type(unsigned int word) {
     unsigned short int opcode_bin = get_opcode(word);
-    RegisterId src                = (word & 0x03E00000) >> 21;
-    RegisterId dest               = (word & 0x001F0000) >> 16;
+    RegisterId src                = RegisterId { static_cast<uint8_t>((word & 0x03E00000) >> 21) };
+    RegisterId dest               = RegisterId { static_cast<uint8_t>((word & 0x001F0000) >> 16) };
     Offset immediate              = (word & 0x0000FFFF);
 
     IOpCode opcode;
@@ -118,7 +118,7 @@ J_Instruction decode_J_type(unsigned int word) {
 
 REGIMM_Instruction decode_REGIMM(Word word) {
     uint8_t regimm_code_bin = (word & 0xF8000  ) >> 15;
-    RegisterId src          = (word & 0x1F00000) >> 20;
+    RegisterId src          = RegisterId { static_cast<uint8_t>((word & 0x1F00000) >> 20) };
     Offset offset           =  word & 0xFFFF;
 
     REGIMMCode code;

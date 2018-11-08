@@ -93,8 +93,9 @@ Word Memory::get_word(Address addr) const {
  * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 Halfword Memory::get_halfword(Address addr) const {
-    // Gets the word to which the byte belongs
-    Word word = get_word(addr / 2);
+    // Gets the word to which the halfword belongs
+    // by bitmasking the low 2 bits
+    Word word = get_word(addr & (!0b11));
     // Selects the 16 bits we are interested in
     Word bitmasked = word & (0xFFFF << addr % 2);
     // And shifts them to the lowest 16 bits
@@ -110,7 +111,8 @@ Halfword Memory::get_halfword(Address addr) const {
  */
 Byte Memory::get_byte(Address addr) const {
     // Gets the word to which the byte belongs
-    Word word = get_word(addr / 4);
+    // by masking the low 2 bits
+    Word word = get_word(addr & (!0b11)); 
     // Selects the 8 bits we are interested in
     Word bitmasked = word & (0xFF << addr % 4);
     // And shifts them to the lowest 8 bits
@@ -174,9 +176,7 @@ void Memory::write_halfword(Address addr, Halfword value) {
  * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_byte(Address addr, Byte value) {
-    if (addr % 2 != 0) throw MemoryError("Halfword access must be halfword-aligned");
-
-    memwrite(addr, [&addr, &value] (Word current) {
+    memwrite((addr & (!0b11)), [&addr, &value] (Word current) {
         Word result = 0;
         switch (addr % 4) {
             case 0: result = ((Word) value << 24) | (current & 0x00FFFFFF); break;

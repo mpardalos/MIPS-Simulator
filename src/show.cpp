@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "show.hpp"
+#include "typedefs.hpp"
 
 using namespace std;
 
@@ -26,3 +27,4 @@ template<> string show( const as_bin& val             ) {
     ss << "0b" << bitset<32>(val.val);
     return ss.str();
 }
+template<> string show( const RegisterId& reg ) { return "$" + show(reg.value); }
