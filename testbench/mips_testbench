@@ -35,10 +35,14 @@ for testbin in $(find $TESTS_DIR | grep -E *.mips.bin | sort); do
     exit_code=$?
 
     # If the exit code and output match what was expected, the test passes
-    if [ "$out" == "$expected_out" ] && [ "$exit_code" = "$expected_exit_code" ]; then
-        pass='Pass'
-    else 
+    if ! [ "$out" == "$expected_out" ]; then
+        message="$message | Expected output: \"$expected_out\" --- got \"$out\""
         pass='Fail'
+    elif ! [ "$exit_code" = "$expected_exit_code" ]; then
+        message="$message | Expected exit code \"$expected_exit_code\" --- got \"$exit_code\""
+        pass='Fail'
+    else 
+        pass='Pass'
     fi
 
     echo "$test_id, $instruction, $pass, $author, $message"
