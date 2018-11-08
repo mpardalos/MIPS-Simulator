@@ -1,8 +1,7 @@
-.set noat
 .text
-    addi $t1, $t1, 8
-    sll $t1, $t1, 28
-    addi $t2, $t2, 8
-    sll $t1, $t1, 28
-    addu $t1, $t2, $t1
+    li $t1, 0x80000000
+    li $t1, 0x80000000
+
+    addu $v0, $t1, $t2
+
     jr $0

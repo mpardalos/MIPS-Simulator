@@ -1,5 +1,4 @@
 author: em2717
 instruction: xor1
-message: xor 5 and -15
-output: -12
-exit_code: 0
+message: 5 xor -15 = -12
+exit_code: 244

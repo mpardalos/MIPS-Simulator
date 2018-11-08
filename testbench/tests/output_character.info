@@ -1,5 +1,5 @@
 author: mp5617
 instruction: sw
-message: Checking putc
+message: Check putc
 output: A
 exit_code: 0

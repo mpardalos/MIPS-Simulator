@@ -1,5 +1,4 @@
 author: em2717
 instruction: or1
-message: OR 5 and -15
-output: -11
-exit_code: 0
+message: 5 OR -15 = -11
+exit_code: 247

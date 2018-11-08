@@ -1,5 +1,4 @@
 author: em2717
-instruction: division by positive
+instruction: div
 message: 28 / 4
-output: 7
-exit_code: 0
+exit_code: 7

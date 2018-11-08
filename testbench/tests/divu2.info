@@ -1,5 +1,4 @@
 author: em2717
-instruction: division by negative 
+instruction: divu
 message: -98 / 4
-output: 24
-exit_code: 0
+exit_code: 232

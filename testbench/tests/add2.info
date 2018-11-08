@@ -1,4 +1,4 @@
 author: em2717
-instruction: add2
-message: Add 6 + -8
-exit_code: 0
+instruction: add
+message: Add 8 + -6
+exit_code: 2

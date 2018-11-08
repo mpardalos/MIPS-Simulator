@@ -1,5 +1,8 @@
 .text 
-    addi $t1, $t1, 10 
-    addi $t2, $t2, -5
+    li $t1, 10 
+    li $t2, -5
+
     mult $t2, $t1
+    mflo $v0
+
     jr $0 

@@ -1,5 +1,5 @@
 author: em2717
-instruction: add1
+instruction: add
 message: Add 50 + 15
-output: A
-exit_code: 0
+output:
+exit_code: 65

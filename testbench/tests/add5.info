@@ -1,5 +1,4 @@
 author: em2717
-instruction: add2
+instruction: add
 message: Add (-6) + (-8)
-output: -14 
-exit_code: 0
+exit_code: 242

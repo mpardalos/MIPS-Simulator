@@ -1,5 +1,4 @@
 author: em2717
-instruction: or2
-message: or 5 and 15
-output: 15
-exit_code: 0
+instruction: or
+message: 5 OR 15 = 15
+exit_code: 15

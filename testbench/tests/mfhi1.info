@@ -1,5 +1,0 @@
-author: em2717
-instruction: division remainder by positive
-message: 30 % 4
-output: 2
-exit_code: 0

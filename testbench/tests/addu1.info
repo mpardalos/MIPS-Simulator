@@ -1,5 +1,4 @@
 author: em2717
-instruction: addu1
+instruction: addu
 message: add unsigned 5 + (-10)
-output: 15
-exit_code: 0
+exit_code: 251

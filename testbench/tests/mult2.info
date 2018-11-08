@@ -1,5 +1,4 @@
 author: em2717
-instruction: mult2
+instruction: mult
 message: Multiply 10 by 5
-output: 50 
-exit_code: 0
+exit_code: 50

@@ -1,5 +1,4 @@
 author: em2717
-instruction: division by 0
-message: -98 / 0
-output: 
-exit_code: -10
+instruction: div
+message: Division by zero
+exit_code: 246
