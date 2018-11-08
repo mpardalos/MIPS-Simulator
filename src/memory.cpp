@@ -18,7 +18,7 @@ using namespace std;
 Memory::Memory(
         unique_ptr<vector<Word>> i_instruction_memory) :
     instruction_memory(move(i_instruction_memory)),
-    data_memory(new vector<Word>(data_size, 0)) {
+    data_memory(new vector<Word>()) {
         assert (instruction_start+(instruction_memory->size()*4) <= data_start);
     }
 
@@ -112,6 +112,11 @@ Byte Memory::get_byte(Address addr) const {
     return byte;
 }
 
+void Memory::memwrite(Address addr, std::function<Word(Word current)> cb) {
+    auto current = get_word(addr);
+    write_word(addr, cb(current));
+}
+
 /**
  * Write a word to memory
  *
@@ -124,8 +129,14 @@ void Memory::write_word(Address addr, Word value) {
     if (is_instruction(addr)) {
         throw MemoryError("Instruction memory is read-only");
     } else if (is_data(addr)) {
+
         int data_index = (addr - data_start) / 4;
+
+        if (data_index > data_memory->capacity()) {
+            data_memory->reserve(data_index+100);
+        }
         data_memory->at(data_index) = value;
+
     } else if (is_putc(addr)) {
         cout << static_cast<char>(value & 0xFF);
     } else if (is_getc(addr)) {
@@ -143,18 +154,12 @@ void Memory::write_word(Address addr, Word value) {
 void Memory::write_halfword(Address addr, Halfword value) {
     if (addr % 2 != 0) throw MemoryError("Halfword access must be halfword-aligned"); 
 
-    if (is_instruction(addr)) {
-        throw MemoryError("Instruction memory is read-only");
-    } else if (is_data(addr)) {
-        Address data_index = (addr - data_start) / 4;
-        Word current = get_word(data_index);
-
-         data_memory->at(data_index) = (addr % 4 == 0)
+    memwrite(addr, [&addr, &value] (Word current) {
+         return (addr % 4 == 0)
             ? ((Word) value << 16) | (current & 0x0000FFFF)
             : ((Word) value)       | (current & 0xFFFF0000);
-    } else {
-        throw MemoryError("Address " + show(as_hex(addr)) + " is out of bounds");
-    }
+
+    });
 }
 
 /**
@@ -165,20 +170,12 @@ void Memory::write_halfword(Address addr, Halfword value) {
 void Memory::write_byte(Address addr, Byte value) {
     if (addr % 2 != 0) throw MemoryError("Halfword access must be halfword-aligned");
 
-    if (is_instruction(addr)) {
-        throw MemoryError("Instruction memory is read-only");
-    } else if (is_data(addr)) {
-        Address data_index = (addr - data_start) / 4;
-        Word current = get_word(data_index);
-
+    memwrite(addr, [&addr, &value] (Word current) {
         switch (addr % 4) {
-            case 0: data_memory->at(data_index) = ((Word) value << 24) | (current & 0x00FFFFFF); break;
-            case 1: data_memory->at(data_index) = ((Word) value << 16) | (current & 0xFF00FFFF); break;
-            case 2: data_memory->at(data_index) = ((Word) value << 8 ) | (current & 0xFFFF00FF); break;
-            case 3: data_memory->at(data_index) = ((Word) value      ) | (current & 0xFFFFFF00); break;
-
+            case 0: return ((Word) value << 24) | (current & 0x00FFFFFF); break;
+            case 1: return ((Word) value << 16) | (current & 0xFF00FFFF); break;
+            case 2: return ((Word) value << 8 ) | (current & 0xFFFF00FF); break;
+            case 3: return ((Word) value      ) | (current & 0xFFFFFF00); break;
         }
-    } else {
-        throw MemoryError("Address " + show(as_hex(addr)) + " is out of bounds");
-    }
+    });
 }

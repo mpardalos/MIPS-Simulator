@@ -5,6 +5,7 @@
 #include <vector>
 #include <exception>
 #include <memory>
+#include <functional>
 
 #include "opcodes.hpp"
 #include "typedefs.hpp"
@@ -34,8 +35,11 @@ class Memory {
         bool is_putc(Address addr) const;
         bool is_getc(Address addr) const;
 
+        void memwrite(Address, std::function<Word(Word current)>);
+
     public:
         Memory(std::unique_ptr<std::vector<Word>> i_instruction_memory);
+
         Word get_word(Address) const;
         void write_word(Address, Word);
 
