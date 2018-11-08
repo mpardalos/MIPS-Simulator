@@ -48,7 +48,7 @@ test: testbench simulator $(testbench)
 	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME)
 
 pretty_test: testbench simulator $(testbench)
-	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) | column -t -s, | grep -E --color=auto 'word|$$'
+	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) | column -t -s, | grep -E --color=auto 'Fail|$$'
 
 # Assemble MIPS assembly file (.s) into MIPS object file (.o)
 %.mips.o: %.s
