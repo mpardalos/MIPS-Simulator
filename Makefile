@@ -1,4 +1,4 @@
-CXX=g++
+CXX=clang++
 SIMULATOR_BIN_NAME=mips_simulator
 DIST=bin
 
@@ -26,7 +26,7 @@ MIPS_LD = mips-linux-gnu-ld
 MIPS_OBJCOPY = mips-linux-gnu-objcopy
 MIPS_OBJDUMP = mips-linux-gnu-objdump
 MIPS_ASFLAGS = -march=mips1 -mfp32 -mabi=32
-MIPS_LDFLAGS = -nostdlib -melf32btsmip --gpsize=0 -static -Bstatic --build-id=none
+MIPS_LDFLAGS = -nostdlib -melf32btsmip --gpsize=0 -static -Bstatic --build-id=none --entry=0000000010000000
 
 testsrc=$(wildcard testbench/tests/*.s)
 testobjects=$(testsrc:.s=.mips.o)
@@ -40,27 +40,33 @@ tests: $(testbins)
 
 testbench: tests $(testbench_script)
 	mkdir -p $(DIST)/tests
-	cp -r testbench/mips_testbench $(DIST)
-	cp -r $(testbins) $(DIST)/tests
-	cp -r testbench/tests/*.info $(DIST)/tests
+	@ echo "Copying testbench"
+	@ cp -r testbench/mips_testbench $(DIST)
+	@ echo "Copying test binaries"
+	@ cp -r $(testbins) $(DIST)/tests
+	@ echo "Copying test info files"
+	@ cp -r testbench/tests/*.info $(DIST)/tests
 
 test: testbench simulator $(testbench)
-	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME)
+	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null
 
 pretty_test: testbench simulator $(testbench)
-	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) | column -t -s, | grep -E --color=auto 'Fail|$$'
+	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null | column -t -s',|' | grep -E --color=auto 'Fail|$$'
 
 # Assemble MIPS assembly file (.s) into MIPS object file (.o)
 %.mips.o: %.s
-	$(MIPS_AS) $(MIPS_ASFLAGS) $< -o $@
+	@ echo "Assembling $@"
+	@ $(MIPS_AS) $(MIPS_ASFLAGS) $< -o $@
 
 # Link MIPS object file (.o), producing .elf, using memory locations specified in spec
 %.mips.elf: %.mips.o
-	$(MIPS_LD) $(MIPS_LDFLAGS) -T $(LINK_SCRIPT) $< -o $@
+	@ echo "Linking $@"
+	@ $(MIPS_LD) $(MIPS_LDFLAGS) -T $(LINK_SCRIPT) $< -o $@
 
 # Extract binary instructions only from linked object file (.elf)
 %.mips.bin: %.mips.elf
-	$(MIPS_OBJCOPY) -O binary --only-section=.text $< $@
+	@ echo "Extracting instructions to $@"
+	@ $(MIPS_OBJCOPY) -O binary --only-section=.text $< $@
 
 # --------------- Helpers --------------- 
 
