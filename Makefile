@@ -7,7 +7,7 @@ DIST=bin
 
 # --------------- Simulator --------------- 
 
-CPPFLAGS=-I include/ -Wall -Wextra -pedantic -Wno-c++14-binary-literal -std=c++11
+CPPFLAGS=-I include/ -Wall -Wextra -Wno-c++14-binary-literal -std=c++11
 src=$(wildcard src/*.cpp)
 headers=$(wildcard src/*.hpp)
 objects=$(src:.cpp=.o)
@@ -46,6 +46,9 @@ testbench: tests $(testbench_script)
 
 test: testbench simulator $(testbench)
 	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME)
+
+pretty_test: testbench simulator $(testbench)
+	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) | column -t -s, | grep -E --color=auto 'word|$$'
 
 # Assemble MIPS assembly file (.s) into MIPS object file (.o)
 %.mips.o: %.s
