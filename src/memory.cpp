@@ -67,6 +67,7 @@ Word Memory::get_word(Address addr) const {
             return instruction_memory->at(inst_index);
         }
     } else if (is_data(addr)) {
+        DEBUG_PRINT("Reading " << show(as_hex(addr)));
         int data_index = (addr - data_start) / 4;
         return data_memory->at(data_index);
     } else if (is_putc(addr)) {
@@ -129,11 +130,10 @@ void Memory::write_word(Address addr, Word value) {
     if (is_instruction(addr)) {
         throw MemoryError("Instruction memory is read-only");
     } else if (is_data(addr)) {
-
         unsigned int data_index = (addr - data_start) / 4;
 
-        if (data_index > data_memory->capacity()) {
-            data_memory->reserve(data_index+100);
+        if (data_index > data_memory->size()) {
+            data_memory->resize(data_memory->size() + data_index + 100, 0);
         }
         data_memory->at(data_index) = value;
 

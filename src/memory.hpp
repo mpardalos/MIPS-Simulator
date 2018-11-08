@@ -19,9 +19,9 @@ class Memory {
         // Where each memory segment is located and how big it is.
         // Basically exactly as on the spec
         const unsigned int instruction_start = 0x10000000;
-        const unsigned int instruction_size = 0xF000000;
-        const unsigned int data_start = 0x20000000;
-        const unsigned int data_size = 0x4000000;
+        const unsigned int instruction_size  =  0x1000000;
+        const unsigned int data_start        = 0x20000000;
+        const unsigned int data_size         =  0x4000000;
 
         // The actual memory storage.
         // The const marker in the beginning only refers to the unique_ptr. I.e. the address of the vector is const.
