@@ -68,8 +68,14 @@ Word Memory::get_word(Address addr) const {
         }
     } else if (is_data(addr)) {
         DEBUG_PRINT("Reading " << show(as_hex(addr)));
-        int data_index = (addr - data_start) / 4;
-        return data_memory->at(data_index);
+
+        unsigned int data_index = (addr - data_start) / 4;
+        if (data_index >= data_memory->size()) {
+            return 0;
+        } else {
+            return data_memory->at(data_index);
+        }
+
     } else if (is_putc(addr)) {
         throw MemoryError("Can't read from putc address");
     } else if (is_getc(addr)) {
