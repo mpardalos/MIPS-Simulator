@@ -1,0 +1,5 @@
+author: mp5617
+instruction: sw
+message: print 'Hello world!"
+output: Hello world!
+exit_code: 0
