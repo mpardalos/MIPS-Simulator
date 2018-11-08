@@ -33,7 +33,7 @@ bool Memory::is_instruction(Address addr) const {
  * Check if and address is within data memory
  */
 bool Memory::is_data(Address addr) const {
-    return addr > instruction_start && addr < (instruction_start+instruction_size);
+    return addr > data_start && addr < (data_start+data_size);
 }
 
 /**
@@ -130,7 +130,7 @@ void Memory::write_word(Address addr, Word value) {
         throw MemoryError("Instruction memory is read-only");
     } else if (is_data(addr)) {
 
-        int data_index = (addr - data_start) / 4;
+        unsigned int data_index = (addr - data_start) / 4;
 
         if (data_index > data_memory->capacity()) {
             data_memory->reserve(data_index+100);
@@ -171,11 +171,13 @@ void Memory::write_byte(Address addr, Byte value) {
     if (addr % 2 != 0) throw MemoryError("Halfword access must be halfword-aligned");
 
     memwrite(addr, [&addr, &value] (Word current) {
+        Word result = 0;
         switch (addr % 4) {
-            case 0: return ((Word) value << 24) | (current & 0x00FFFFFF); break;
-            case 1: return ((Word) value << 16) | (current & 0xFF00FFFF); break;
-            case 2: return ((Word) value << 8 ) | (current & 0xFFFF00FF); break;
-            case 3: return ((Word) value      ) | (current & 0xFFFFFF00); break;
+            case 0: result = ((Word) value << 24) | (current & 0x00FFFFFF); break;
+            case 1: result = ((Word) value << 16) | (current & 0xFF00FFFF); break;
+            case 2: result = ((Word) value << 8 ) | (current & 0xFFFF00FF); break;
+            case 3: result = ((Word) value      ) | (current & 0xFFFFFF00); break;
         }
+        return result;
     });
 }
