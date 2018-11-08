@@ -1,5 +1,5 @@
 author: em2717
-instruction: sll
-message: Left shift
-output: @
+instruction: sll1
+message: Shifting 5 by 2
+output: 10 
 exit_code: 0

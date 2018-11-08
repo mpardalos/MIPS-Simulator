@@ -1,7 +1,4 @@
 .text
-    ori $t1, 65
-    
-    li $t5, 0x30000000
-    sw $t1, 4($t5)
-
+    ori $t1, $t1, 6
+    ori $t2, $t2, 8
     jr $0

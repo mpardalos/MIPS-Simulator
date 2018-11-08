@@ -1,11 +1,9 @@
 .text 
-    li $t1, -34
-    li $t2, 5
-
+    addi $t1, $t1, 5
+    sll $t1, $t1, 29 
+    addi $t2, $t2, -10
+    sll $t2, $t2, 28
     mult $t2, $t1
-    mflo $t1
-
-    li $t5, 0x30000000
-    sw $t1, 4($t5)
-
     jr $0 
+
+

@@ -1,5 +1,5 @@
 author: em2717
-instruction: addu
+instruction: addu2
 message: add unsigned 50 + 10
-output: A
+output: 60
 exit_code: 0

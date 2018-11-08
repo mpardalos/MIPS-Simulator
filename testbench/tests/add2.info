@@ -1,5 +1,4 @@
 author: em2717
-instruction: add
-message: Positive + negative
-output: A
+instruction: add2
+message: Add 6 + -8
 exit_code: 0

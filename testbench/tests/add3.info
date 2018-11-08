@@ -1,5 +1,5 @@
 author: em2717
-instruction: add
+instruction: add3
 message: positive overflow
-output:
-exit_code: 246
+output:  
+exit_code: -10

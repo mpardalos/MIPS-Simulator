@@ -1,5 +1,5 @@
 author: em2717
-instruction: addu
+instruction: addu1
 message: add unsigned 5 + (-10)
-output: V
+output: 15
 exit_code: 0

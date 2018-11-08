@@ -1,5 +1,5 @@
-author: mp5617
-instruction: sllv
+author: em2717
+instruction: sllv2
 message: Shifting -5 by 2
-output: V
+output: -10 
 exit_code: 0
