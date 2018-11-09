@@ -79,9 +79,7 @@ Word Memory::get_word(Address addr) const {
     } else if (is_putc(addr)) {
         throw MemoryError("Can't read from putc address");
     } else if (is_getc(addr)) {
-        char input;
-        cin >> input;
-        return static_cast<Word>(input);
+        return getchar();
     } else {
         throw MemoryError("Address " + show(as_hex(addr)) + " is out of bounds");
     }

@@ -1,6 +1,6 @@
 .text
         li $t5, 0x30000000 # Address of getc
-        li $t4, 126 # 126 = ~, which terminates
+        li $t4, 0xFFFFFFFF # EOF
         li $t3, 10 # newline
 
 .read:  lw $t1, 0($t5)

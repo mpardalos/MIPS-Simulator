@@ -1,5 +1,5 @@
 author: mp5617
 instruction: sw
-message: echo stdin until ~
-input: abcdef~
+message: echo stdin until EOF
+input: abcdef
 output: abcdef
