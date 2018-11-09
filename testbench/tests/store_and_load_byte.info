@@ -1,4 +1,4 @@
 author: mp5617
 instruction: sw
-message: Store and reload a word
+message: Store and reload a byte
 exit_code: 97
