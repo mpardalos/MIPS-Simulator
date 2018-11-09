@@ -1,0 +1,5 @@
+author: em2717
+instruction: sra
+message: 20 shifted 2
+expected_output: 
+exit_code: 5
