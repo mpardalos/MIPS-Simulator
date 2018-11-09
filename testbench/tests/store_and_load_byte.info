@@ -1,0 +1,4 @@
+author: mp5617
+instruction: sw
+message: Store and reload a word
+exit_code: 97

@@ -7,6 +7,7 @@
 
 using namespace std;
 
+template<> string show( const int& val                ) { return to_string(val); }
 template<> string show( const long long& val          ) { return to_string(val); }
 template<> string show( const unsigned& val           ) { return to_string(val); }
 template<> string show( const unsigned long& val      ) { return to_string(val); }

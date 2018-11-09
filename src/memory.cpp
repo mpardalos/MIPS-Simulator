@@ -95,11 +95,13 @@ Word Memory::get_word(Address addr) const {
 Halfword Memory::get_halfword(Address addr) const {
     // Gets the word to which the halfword belongs
     // by bitmasking the low 2 bits
-    Word word = get_word(addr & (!0b11));
-    // Selects the 16 bits we are interested in
-    Word bitmasked = word & (0xFFFF << addr % 2);
+    Word word = get_word(addr & (~0b11));
+
+    // Shifts the bits we want to the lowest 16 bits
+    Word shifted = word >> (16 * (1 - addr % 2));
+
     // And shifts them to the lowest 16 bits
-    Halfword halfword = bitmasked >> (addr % 2);
+    Halfword halfword = shifted & 0xFFFF;
 
     return halfword;
 }
@@ -110,20 +112,25 @@ Halfword Memory::get_halfword(Address addr) const {
  * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 Byte Memory::get_byte(Address addr) const {
+    int shift_amount = 8 * (3 - (addr % 4));
+
     // Gets the word to which the byte belongs
     // by masking the low 2 bits
-    Word word = get_word(addr & (!0b11)); 
-    // Selects the 8 bits we are interested in
-    Word bitmasked = word & (0xFF << addr % 4);
-    // And shifts them to the lowest 8 bits
-    Byte byte = bitmasked >> (addr % 4);
+    Word word = get_word(addr & (~0b11)); 
+
+    // Shifts the bits we want to the lowest 8 bits
+    Word shifted = word >> shift_amount;
+    // And masks everything else
+    Byte byte = shifted & 0xFF;
 
     return byte;
 }
 
 void Memory::memwrite(Address addr, std::function<Word(Word current)> cb) {
-    auto current = get_word(addr);
-    write_word(addr, cb(current));
+    Address word_address = addr & (~0b11);
+
+    auto current = get_word(word_address);
+    write_word(word_address, cb(current));
 }
 
 /**
@@ -176,13 +183,13 @@ void Memory::write_halfword(Address addr, Halfword value) {
  * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 void Memory::write_byte(Address addr, Byte value) {
-    memwrite((addr & (!0b11)), [&addr, &value] (Word current) {
+    memwrite(addr, [&addr, &value] (Word current) {
         Word result = 0;
         switch (addr % 4) {
-            case 0: result = ((Word) value << 24) | (current & 0x00FFFFFF); break;
-            case 1: result = ((Word) value << 16) | (current & 0xFF00FFFF); break;
-            case 2: result = ((Word) value << 8 ) | (current & 0xFFFF00FF); break;
-            case 3: result = ((Word) value      ) | (current & 0xFFFFFF00); break;
+            case 0: result = (static_cast<Word>(value) << 24) | (current & 0x00FFFFFF); break;
+            case 1: result = (static_cast<Word>(value) << 16) | (current & 0xFF00FFFF); break;
+            case 2: result = (static_cast<Word>(value) << 8 ) | (current & 0xFFFF00FF); break;
+            case 3: result = (static_cast<Word>(value)      ) | (current & 0xFFFFFF00); break;
         }
         return result;
     });

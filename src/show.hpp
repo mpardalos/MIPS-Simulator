@@ -17,6 +17,7 @@ struct as_bin {
 };
 
 // Replicate all to_string functionstemplate<> std::string show( const long& val               ) { return std::to_string(val); };
+template<> std::string show( const int& val                );
 template<> std::string show( const long long& val          );
 template<> std::string show( const unsigned& val           );
 template<> std::string show( const unsigned long& val      );
