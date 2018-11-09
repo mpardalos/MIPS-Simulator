@@ -2,4 +2,4 @@ author: em2717
 instruction: sub4
 message: subtraction overflow
 output:  
-exit_code: -10
+exit_code: 246

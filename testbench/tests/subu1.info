@@ -1,5 +1,4 @@
 author: em2717
 instruction: subu1
 message: 2 positive minus
-output: 101
-exit_code: 0
+exit_code: 101

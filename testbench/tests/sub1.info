@@ -1,5 +1,4 @@
 author: em2717
 instruction: sub1
 message: subtraction with two negatives
-output:  -20
 exit_code: 0

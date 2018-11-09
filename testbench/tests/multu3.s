@@ -4,6 +4,7 @@
     addi $t2, $t2, -10
     sll $t2, $t2, 28
     mult $t2, $t1
+	mflo $2
     jr $0 
 
 
