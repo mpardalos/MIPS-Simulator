@@ -1,5 +1,5 @@
 author: em2717
 instruction: srl
-message: -20 shifted 2
+message: 0xFF000000 shifted 28
 expected_output: 
-exit_code: 251
+exit_code: 15
