@@ -119,7 +119,6 @@ void CPU::execute_r_type(R_Instruction inst) {
                 set_register(inst.dest, 0);
                 advance_pc(4);
             }
-            advance_pc(4);
             break;
         case OpFunction::SLTU:
             if ((unsigned int) get_register(inst.src1) < (unsigned int) get_register(inst.src2)) {
@@ -129,7 +128,6 @@ void CPU::execute_r_type(R_Instruction inst) {
                 set_register(inst.dest, 0);
                 advance_pc(4);
             }
-            advance_pc(4);
             break;
         case OpFunction::ADD:
             if((get_register(inst.src1) + get_register(inst.src2) >= 0) && (get_register(inst.src1) < 0 && get_register(inst.src2) < 0)) {
