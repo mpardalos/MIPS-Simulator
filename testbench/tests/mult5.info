@@ -1,0 +1,4 @@
+author: em2717
+instruction: mult5
+message: Multiply 10 by -5, check hi
+exit_code: 255

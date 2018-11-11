@@ -1,5 +1,5 @@
 author: em2717
 instruction: multu3
-message: Multiply 0xA0000000 by 0xA0000000
+message: Multiply 0xA0000000 by 0xA0000000, check lo
 output: 
 exit_code: 0
