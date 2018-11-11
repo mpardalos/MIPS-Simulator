@@ -2,4 +2,4 @@ author: em2717
 instruction: multu2
 message: Multiply 10 by -15
 output:  
-exit_code: 150
+exit_code: 106

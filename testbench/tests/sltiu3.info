@@ -1,0 +1,5 @@
+author: em2717
+instruction: sltiu
+message: 20 < 50
+output:  
+exit_code: 1

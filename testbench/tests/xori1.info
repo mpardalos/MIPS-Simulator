@@ -1,0 +1,5 @@
+author: em2717
+instruction: xori
+message: xor 15 ^ 6
+output:  
+exit_code: 9

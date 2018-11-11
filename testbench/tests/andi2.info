@@ -1,0 +1,5 @@
+author: em2717
+instruction: andi
+message: 20 & 25
+output:  
+exit_code: 16

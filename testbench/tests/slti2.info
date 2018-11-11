@@ -1,0 +1,5 @@
+author: em2717
+instruction: slti
+message: 100 < 20
+output:  
+exit_code: 0

@@ -1,0 +1,5 @@
+author: em2717
+instruction: slt
+message: equal 
+output:  
+exit_code: 0

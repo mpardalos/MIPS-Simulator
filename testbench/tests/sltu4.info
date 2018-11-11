@@ -1,0 +1,5 @@
+author: em2717
+instruction: sltu
+message: -6 < -8 
+output:  
+exit_code: 0

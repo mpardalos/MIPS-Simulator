@@ -1,5 +1,5 @@
 author: em2717
 instruction: mult3
-message: Multiply 0xA0000000 by 0x60000000
+message: Multiply 0xA0000000 by 0x60000000, check lo
 output:
 exit_code: 0

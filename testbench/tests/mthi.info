@@ -1,0 +1,5 @@
+author: em2717
+instruction: mthi
+message: put 6 in hi 
+output:  
+exit_code: 6
