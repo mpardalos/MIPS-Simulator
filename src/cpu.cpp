@@ -62,10 +62,11 @@ void CPU::execute_instruction(Instruction instruction) {
 void CPU::execute_Special_type(Special_Instruction inst) {
     switch (inst.opcode) {
         case SpecialOpcode::REGDUMP:
-            std::cout << "PC:\t"  << std::to_string(PC)  << std::endl;
-            std::cout << "nPC:\t" << std::to_string(nPC) << std::endl;
+            std::cout << "PC:\t"  << show(as_hex(PC))  << std::endl;
+            std::cout << "nPC:\t" << show(as_hex(nPC)) << std::endl;
             for (uint8_t i = 0; i <= 31; i++) {
-                std::cout << "$" << i << ":\t" << std::to_string(get_register(RegisterId{i})) << std::endl;
+                RegisterId ri = RegisterId{i};
+                std::cout << show(ri) << ":\t" << show(as_hex(get_register(ri))) << std::endl;
             }
             advance_pc(4);
             break;
