@@ -1,4 +1,4 @@
-CXX=clang++
+CXX=g++
 SIMULATOR_BIN_NAME=mips_simulator
 DIST=bin
 
