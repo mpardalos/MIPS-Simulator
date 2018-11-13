@@ -8,9 +8,14 @@ Build testbench in bin/:
 make testbench
 ```
 
-run all tests
+Run all tests and output csv
 ```
 make test
+```
+
+Run all tests and output pretty table
+```
+make pretty_test
 ```
 
 Clean everything:
@@ -20,6 +25,9 @@ make clean
 
 ## Dependencies
 
-* https://github.com/mapbox/variant
+* https://github.com/mapbox/variant (In `include/`)
 
-Everything in `include/` is an external dependency.
+* https://github.com/kepkin/dev-shell-essentials 
+  Not used for assessed code, just for pretty printing with make pretty_test.
+  Only using a modified version of [highlight.sh](https://github.com/kepkin/dev-shell-essentials/blob/master/highlight.sh)
+  in scripts/highlight.
