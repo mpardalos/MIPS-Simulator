@@ -1,0 +1,4 @@
+author: mp5617
+instruction: jal
+message: Test that jal jumps
+exit_code: 10
