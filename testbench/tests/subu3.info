@@ -1,4 +1,4 @@
 author: em2717
-instruction: subu3
+instruction: subu
 message: 1 positive and 1 negative minus
 exit_code: 199

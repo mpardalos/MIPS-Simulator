@@ -1,4 +1,4 @@
 author: em2717
-instruction: sub1
+instruction: sub
 message: subtraction with two negatives
 exit_code: 0

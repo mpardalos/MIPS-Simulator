@@ -1,5 +1,5 @@
 author: em2717
-instruction: sub4
+instruction: sub
 message: subtraction overflow
 output:  
 exit_code: 246

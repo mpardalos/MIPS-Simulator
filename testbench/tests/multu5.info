@@ -1,5 +1,5 @@
 author: em2717
-instruction: multu5
+instruction: multu
 message: Multiply 10 by -15, check hi
 output:  
-exit_code: 0
+exit_code: 9

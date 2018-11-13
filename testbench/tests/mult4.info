@@ -1,5 +1,5 @@
 author: em2717
-instruction: mult4
+instruction: mult
 message: Multiply 0xA000 0000 by 0x6000 0000, check hi
 output:
 exit_code: 220

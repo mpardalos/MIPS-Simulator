@@ -1,4 +1,4 @@
 author: em2717
-instruction: sub2
+instruction: sub
 message: subtraction with a negative and a positive
 exit_code: 241

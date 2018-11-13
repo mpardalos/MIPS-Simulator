@@ -1,5 +1,5 @@
 author: em2717
-instruction: sll1
+instruction: sll
 message: Shifting 5 by 2
 output:  
 exit_code: 20

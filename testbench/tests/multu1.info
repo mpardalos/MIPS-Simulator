@@ -1,5 +1,5 @@
 author: em2717
-instruction: multu1
+instruction: multu
 message: Multiply 10 by 15
 output:  
 exit_code: 150

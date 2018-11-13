@@ -1,4 +1,4 @@
 author: em2717
-instruction: xor1
+instruction: xor
 message: 5 xor -15 = -12
 exit_code: 244
