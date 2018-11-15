@@ -1,0 +1,5 @@
+author: em2717
+instruction: bne
+message: branching works
+output:
+exit_code: 1

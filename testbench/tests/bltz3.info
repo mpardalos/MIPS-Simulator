@@ -1,0 +1,4 @@
+author: em2717
+instruction: bltz
+message: branching when zero
+exit_code: 255

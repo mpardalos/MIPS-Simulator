@@ -1,0 +1,5 @@
+author: em2717
+instruction: bgtz
+message: branching greater than works
+output:
+exit_code: 1

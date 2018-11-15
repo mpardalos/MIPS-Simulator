@@ -1,0 +1,5 @@
+author: em2717
+instruction: bgez
+message: testing 0
+output:
+exit_code: 1

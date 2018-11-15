@@ -1,0 +1,4 @@
+author: em2717
+instruction: bgtz
+message: testing branching at 0
+exit_code: 255

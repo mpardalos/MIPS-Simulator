@@ -1,0 +1,4 @@
+author: em2717
+instruction: beq
+message: checks branching works
+exit_code: 5
