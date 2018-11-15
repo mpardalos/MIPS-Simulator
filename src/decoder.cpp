@@ -117,8 +117,8 @@ J_Instruction decode_J_type(unsigned int word) {
 }
 
 REGIMM_Instruction decode_REGIMM(Word word) {
-    uint8_t regimm_code_bin = (word & 0xF8000  ) >> 15;
-    RegisterId src          = RegisterId { static_cast<uint8_t>((word & 0x1F00000) >> 20) };
+    uint8_t regimm_code_bin = static_cast<uint8_t>((word & 0x001F0000) >> 16);
+    RegisterId src          = RegisterId { static_cast<uint8_t>((word & 0x03E00000) >> 21) };
     Offset offset           =  word & 0xFFFF;
 
     REGIMMCode code;
