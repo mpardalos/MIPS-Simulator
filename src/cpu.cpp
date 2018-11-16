@@ -245,8 +245,8 @@ void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
             }
             break;
         case REGIMMCode::BGEZAL:
+            set_register(rRA, PC + 8);
             if(get_register(inst.src) >= 0) {
-                set_register(rRA, PC + 8);
                 advance_pc(inst.offset << 2);
             } else {
                 advance_pc(4);
@@ -260,8 +260,8 @@ void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
             }
             break;
         case REGIMMCode::BLTZAL:
+            set_register(rRA, PC + 8);
             if(get_register(inst.src) < 0) {
-                set_register(rRA, PC + 8);
                 advance_pc(inst.offset << 2);
             } else {
                 advance_pc(4);
@@ -273,7 +273,7 @@ void CPU::execute_REGIMM_type(REGIMM_Instruction inst) {
 void CPU::execute_i_type(I_Instruction inst) {
     switch (inst.opcode) {
         case IOpCode::LB:
-            set_register(inst.dest, memory.get_byte(get_register(inst.src) + inst.immediate));
+            set_register(inst.dest, static_cast<int32_t>(static_cast<int8_t>(memory.get_byte(get_register(inst.src) + inst.immediate))));
             advance_pc(4);
             break;
         case IOpCode::LBU:
