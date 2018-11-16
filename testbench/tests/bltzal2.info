@@ -1,0 +1,4 @@
+author: em2717
+instruction: bltzal
+message: linking works
+exit_code: 255

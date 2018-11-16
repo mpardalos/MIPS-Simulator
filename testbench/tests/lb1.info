@@ -1,0 +1,4 @@
+author: em2717
+instruction: lb
+message: load byte correctly
+exit_code: 20

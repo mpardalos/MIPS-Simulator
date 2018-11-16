@@ -1,5 +1,5 @@
 author: mp5617
-instruction: lw
+instruction: lb
 message: Read a byte from uninitialized memory
 output: 
 exit_code: 0

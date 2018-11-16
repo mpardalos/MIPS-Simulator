@@ -1,5 +1,5 @@
 author: mp5617
-instruction: lw
+instruction: lh
 message: Read a halfword from uninitialized memory
 output: 
 exit_code: 0

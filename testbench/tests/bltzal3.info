@@ -1,0 +1,4 @@
+author: em2717
+instruction: bltzal
+message: linking and branching should not work
+exit_code: 2

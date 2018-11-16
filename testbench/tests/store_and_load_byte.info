@@ -1,4 +1,4 @@
 author: mp5617
-instruction: sw
+instruction: sb
 message: Store and reload a byte
 exit_code: 97

@@ -1,5 +1,5 @@
 author: em2717
 instruction: multu
-message: Multiply 0xA0000000 by 0xA0000000, check hi
+message: Multiply 0xA0000000 by 0xA0000000 check hi
 output: 
 exit_code: 30
