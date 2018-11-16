@@ -1,4 +1,4 @@
 author: mp5617
-instruction: sw
+instruction: sh
 message: Store and reload a halfword
 exit_code: 97

@@ -33,7 +33,7 @@ bool Memory::is_instruction(Address addr) const {
  * Check if and address is within data memory
  */
 bool Memory::is_data(Address addr) const {
-    return addr > data_start && addr < (data_start+data_size);
+    return addr >= data_start && addr < (data_start+data_size);
 }
 
 /**
