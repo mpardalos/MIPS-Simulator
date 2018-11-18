@@ -91,6 +91,10 @@ Word Memory::get_word(Address addr) const {
  * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 Halfword Memory::get_halfword(Address addr) const {
+    if((addr & ~0b1) != 0) {
+        throw(MemoryError("Address not naturally-aligned"));
+    }
+    
     // Gets the word to which the halfword belongs
     // by bitmasking the low 2 bits
     Word word = get_word(addr & (~0b11));
