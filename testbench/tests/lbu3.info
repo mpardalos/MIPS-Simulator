@@ -1,0 +1,4 @@
+author: em2717
+instruction: lbu
+message: loading byte with offset 2
+exit_code: 98

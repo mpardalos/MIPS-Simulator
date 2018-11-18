@@ -1,0 +1,4 @@
+author: em2717
+instruction: lbu
+message: load byte correctly
+exit_code: 191

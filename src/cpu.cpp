@@ -281,7 +281,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             advance_pc(4);
             break;
         case IOpCode::LH:
-            set_register(inst.dest, memory.get_halfword(get_register(inst.src) + inst.immediate));
+            set_register(inst.dest, static_cast<int32_t>(static_cast<int16_t>(memory.get_halfword(get_register(inst.src) + inst.immediate))));
             advance_pc(4);
             break;
         case IOpCode::LHU:
