@@ -1,0 +1,4 @@
+author: em2717
+instruction: lhu
+message: load with offset
+exit_code: 191

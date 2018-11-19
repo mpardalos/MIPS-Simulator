@@ -1,0 +1,4 @@
+author: em2717
+instruction: lhu
+message: address not aligned
+exit_code: 245

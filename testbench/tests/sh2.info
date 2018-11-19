@@ -1,0 +1,4 @@
+author: em2717
+instruction: sh
+message: stores halfword with offset correctly
+exit_code: 52

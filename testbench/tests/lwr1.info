@@ -1,0 +1,4 @@
+author: em2717
+instruction: lwr
+message: checking lwr with no offset
+exit_code: 18
