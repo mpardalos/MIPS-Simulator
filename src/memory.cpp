@@ -120,6 +120,7 @@ Halfword Memory::get_halfword(Address addr) const {
 Byte Memory::get_byte(Address addr) const {
     DEBUG_PRINT("Reading byte " + show(as_hex(addr)));
     int shift_amount = 8 * (3 - (addr % 4));
+    DEBUG_PRINT("Shift amount: " + show(shift_amount));
 
     // Gets the word to which the byte belongs
     // by masking the low 2 bits
@@ -154,7 +155,7 @@ void Memory::write_word(Address addr, Word value) {
     } else if (is_data(addr)) {
         unsigned int data_index = (addr - data_start) / 4;
 
-        if (data_index > data_memory->size()) {
+        if (data_index >= data_memory->size()) {
             data_memory->resize(data_memory->size() + data_index + 100, 0);
         }
         data_memory->at(data_index) = value;
