@@ -1,0 +1,4 @@
+author: mp5617
+instruction: sh
+message: Write to instruction memory exception
+exit_code: 245
