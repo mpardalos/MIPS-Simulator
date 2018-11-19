@@ -1,4 +1,4 @@
 author: em2717
 instruction: lh
-message: load halfword (0xBF)
+message: load halfword 
 exit_code: 53
