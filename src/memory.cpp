@@ -91,16 +91,20 @@ Word Memory::get_word(Address addr) const {
  * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 Halfword Memory::get_halfword(Address addr) const {
-    if((addr & 1) != 0) {
+    DEBUG_PRINT("Reading halfword " + show(as_hex(addr)));
+    if((addr % 2) != 0) {
         throw MemoryError("Address not naturally-aligned");
     }
-
     // Gets the word to which the halfword belongs
     // by bitmasking the low 2 bits
     Word word = get_word(addr & (~0b11));
 
     // Shifts the bits we want to the lowest 16 bits
-    Word shifted = word >> (16 * (1 - addr % 2));
+    // addr % 4 can only be 0 or 2 since we are checking that addr % 2 == 0.
+    // If it's zero then we are trying to read the upper halfword and so we need to shift 
+    // right by 16.
+    // If it's 2 then we are trying to read the lower halfword and so we don't need to shift
+    Word shifted = word >> (8 * (2 - (addr % 4)));
 
     // And shifts them to the lowest 16 bits
     Halfword halfword = shifted & 0xFFFF;
@@ -114,6 +118,7 @@ Halfword Memory::get_halfword(Address addr) const {
  * Throws invalid_argument if the address is out of bounds of the instruction and data memories.
  */
 Byte Memory::get_byte(Address addr) const {
+    DEBUG_PRINT("Reading byte " + show(as_hex(addr)));
     int shift_amount = 8 * (3 - (addr % 4));
 
     // Gets the word to which the byte belongs
