@@ -1,0 +1,4 @@
+author: mp5617
+instruction: lb
+message: Read from instruction memory
+exit_code: 18

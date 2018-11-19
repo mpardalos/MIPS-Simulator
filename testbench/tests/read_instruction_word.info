@@ -1,0 +1,4 @@
+author: mp5617
+instruction: lw
+message: Read from instruction memory
+exit_code: 120
