@@ -1,0 +1,4 @@
+author: mp5617
+instruction: lb
+message: Load 2nd highest byte
+exit_code: 52
