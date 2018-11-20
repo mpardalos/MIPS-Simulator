@@ -57,6 +57,7 @@ bool Memory::is_putc(Address addr) const {
  * or if it is out of bounds of the instruction and data memories.
  */
 Word Memory::get_word(Address addr) const {
+    DEBUG_PRINT("Reading word " << show(as_hex(addr)));
     if (addr % 4 != 0) throw MemoryError("Word access must be word-aligned");
 
     if (is_instruction(addr)) {
@@ -67,8 +68,6 @@ Word Memory::get_word(Address addr) const {
             return instruction_memory->at(inst_index);
         }
     } else if (is_data(addr)) {
-        DEBUG_PRINT("Reading " << show(as_hex(addr)));
-
         unsigned int data_index = (addr - data_start) / 4;
         if (data_index >= data_memory->size()) {
             return 0;
@@ -120,7 +119,6 @@ Halfword Memory::get_halfword(Address addr) const {
 Byte Memory::get_byte(Address addr) const {
     DEBUG_PRINT("Reading byte " + show(as_hex(addr)));
     int shift_amount = 8 * (3 - (addr % 4));
-    DEBUG_PRINT("Shift amount: " + show(shift_amount));
 
     // Gets the word to which the byte belongs
     // by masking the low 2 bits

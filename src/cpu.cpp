@@ -38,7 +38,7 @@ uint8_t CPU::run(bool trace) {
         }
 
         Instruction inst = decode(inst_bin);
-        if (trace) cout << show(inst) << endl;
+        if (trace) cout << show(as_hex(PC)) << ": " << show(inst) << endl;
         execute_instruction(inst);
     }
     return get_register(RegisterId{2}) & 0xFF;

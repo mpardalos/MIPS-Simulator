@@ -7,8 +7,9 @@ DIST=bin
 
 # --------------- Simulator --------------- 
 
-# DEBUG_FLAGS=-DDEBUG -DBREAK_IS_REGDUMP
-CPPFLAGS=-I include/ -Wall -Wextra -Wno-c++14-binary-literal -std=c++11 $(DEBUG_FLAGS)
+# ENABLE_BREAK=-DBREAK_IS_REGDUMP
+# DEBUG_FLAGS=-DDEBUG 
+CPPFLAGS=-I include/ -Wall -Wextra -Wno-c++14-binary-literal -std=c++11 $(DEBUG_FLAGS) $(ENABLE_BREAK)
 src=$(wildcard src/*.cpp)
 headers=$(wildcard src/*.hpp)
 objects=$(src:.cpp=.o)
@@ -34,6 +35,13 @@ testobjects=$(testsrc:.s=.mips.o)
 testelf=$(testsrc:.s=.mips.elf)
 testbins=$(testsrc:.s=.mips.bin)
 .PRECIOUS: $(testelf)
+
+toysrc=$(wildcard toys/*.s)
+toyobjects=$(toysrc:.s=.mips.o)
+toyelf=$(toysrc:.s=.mips.elf)
+toybins=$(toysrc:.s=.mips.bin)
+.PRECIOUS: $(toyelf)
+toys: $(testbins)
 
 testbench_script=testbench/mips_testbench
 
