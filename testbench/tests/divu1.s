@@ -2,6 +2,7 @@
     li $t1, 28 
     li $t2, 4
 
-    divu $v0, $t1, $t2 
+    .word 0x012a001b # divu $t1, $t2
+    mflo $v0
 
     jr $0

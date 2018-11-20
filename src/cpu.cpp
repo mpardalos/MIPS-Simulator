@@ -76,13 +76,8 @@ void CPU::execute_Special_type(Special_Instruction inst) {
 void CPU::execute_r_type(R_Instruction inst) {
     switch (inst.function) {
         case OpFunction::JALR:
-            if(get_register(inst.src2) == 0) {
-                set_register(rRA, PC);
-                nPC = get_register(inst.src1);
-            } else {
-                set_register(inst.src2, PC);
-                nPC = get_register(inst.src1);
-            }
+            set_register(inst.src2, PC);
+            nPC = get_register(inst.src1);
             break;
         case OpFunction::JR:
             PC = nPC;
@@ -159,19 +154,17 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::DIV:
-            if(get_register(inst.src2) == 0) {
-                throw ArithmeticError("Division by zero");
-            }
-            LO = get_register(inst.src1) / get_register(inst.src2);
-            HI = get_register(inst.src1) % get_register(inst.src2);
+            if(get_register(inst.src2) != 0) {
+                LO = get_register(inst.src1) / get_register(inst.src2);
+                HI = get_register(inst.src1) % get_register(inst.src2);
+            } 
             advance_pc(4);
             break;
         case OpFunction::DIVU:
-            if(get_register(inst.src2) == 0) {
-                throw ArithmeticError("Division by zero");
+            if(get_register(inst.src2) != 0) {
+                LO = get_register(inst.src1) / get_register(inst.src2);
+                HI = get_register(inst.src1) % get_register(inst.src2);
             }
-            LO = get_register(inst.src1) / get_register(inst.src2);
-            HI = get_register(inst.src1) % get_register(inst.src2);
             advance_pc(4);
             break;
         case OpFunction::MFHI:

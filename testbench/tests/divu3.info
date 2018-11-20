@@ -1,4 +1,4 @@
 author: em2717
-instruction: div
-message: division by zero
-exit_code: 246
+instruction: divu
+message: division by zero doesn't crash
+exit_code: 10

@@ -1,4 +1,4 @@
 author: em2717
 instruction: div
-message: Division by zero
-exit_code: 246
+message: Division by zero doesn't crash
+exit_code: 10
