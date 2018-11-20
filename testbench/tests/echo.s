@@ -1,7 +1,7 @@
 .text
         li $t5, 0x30000000 # Address of getc
-        li $t4, 0xFFFFFFFF # EOF
-        li $t3, 10 # newline
+        li $t4, -1         # EOF
+        li $t3, 10         # newline
 
 .read:  lw $t1, 0($t5)
         beq $t1, $t4, .exit
