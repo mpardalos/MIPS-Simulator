@@ -162,8 +162,8 @@ void CPU::execute_r_type(R_Instruction inst) {
             break;
         case OpFunction::DIVU:
             if(get_register(inst.src2) != 0) {
-                LO = get_register(inst.src1) / get_register(inst.src2);
-                HI = get_register(inst.src1) % get_register(inst.src2);
+                LO = static_cast<uint32_t>(get_register(inst.src1)) / static_cast<uint32_t> (get_register(inst.src2));
+                HI = static_cast<uint32_t>(get_register(inst.src1)) % static_cast<uint32_t> (get_register(inst.src2));
             }
             advance_pc(4);
             break;
