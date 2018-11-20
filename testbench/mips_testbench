@@ -2,6 +2,7 @@
 
 SIMULATOR=$1
 TESTS_DIR=bin/tests
+TEST_TIMEOUT=5
 
 function info_file() {
     echo $1 | sed 's/\..*$/.info/g'
@@ -31,11 +32,14 @@ for testbin in $(find $TESTS_DIR | grep -E *.mips.bin | sort); do
     [ "$expected_exit_code" == "" ] && expected_exit_code=0
 
     # Run binary and capture exit code and output
-    out=$(echo $input | $SIMULATOR $testbin)
+    out=$(echo $input | timeout "$TEST_TIMEOUT"s $SIMULATOR $testbin)
     exit_code=$?
 
     # If the exit code and output match what was expected, the test passes
-    if ! [ "$out" == "$expected_out" ]; then
+    if [ $exit_code = 124 ]; then
+        message="$message | timeout"
+        pass='Fail'
+    elif ! [ "$out" == "$expected_out" ]; then
         message="$message | Expected output: \"$expected_out\" --- got \"$out\""
         pass='Fail'
     elif ! [ "$exit_code" = "$expected_exit_code" ]; then
