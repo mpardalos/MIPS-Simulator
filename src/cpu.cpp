@@ -303,25 +303,29 @@ void CPU::execute_i_type(I_Instruction inst) {
                 set_register(inst.dest, (memory.get_word(get_register(inst.src) + inst.immediate - 1) << 8) | (get_register(inst.dest) & 0x000000FF));
             }
             else if((inst.immediate + get_register(inst.src) % 4) == 2) {
-                set_register(inst.dest, memory.get_halfword(get_register(inst.src) + inst.immediate) << 16 | get_register(inst.dest) & 0x0000FFFF);
+                set_register(inst.dest, (memory.get_halfword(get_register(inst.src) + inst.immediate) << 16) | (get_register(inst.dest) & 0x0000FFFF));
             }
             else if((inst.immediate + get_register(inst.src) % 4) == 3) {
-                set_register(inst.dest, memory.get_byte(inst.immediate + get_register(inst.src)) << 24 | get_register(inst.dest) & 0x00FFFFFF);
+                set_register(inst.dest, (memory.get_byte(inst.immediate + get_register(inst.src)) << 24) | (get_register(inst.dest) & 0x00FFFFFF));
             }
             advance_pc(4);
             break;
         case IOpCode::LWR: 
             if((inst.immediate + get_register(inst.src) % 4) == 0) {
-                set_register(inst.dest, memory.get_byte(get_register(inst.src) + inst.immediate) | get_register(inst.dest) & 0xFFFFFF00);
+                set_register(inst.dest, 
+                    memory.get_byte(get_register(inst.src) + inst.immediate) | (get_register(inst.dest) & 0xFFFFFF00));
             }
             else if((inst.immediate + get_register(inst.src) % 4) == 1) {
-                set_register(inst.dest, memory.get_halfword(get_register(inst.src) + inst.immediate - 1) | get_register(inst.dest) & 0xFFFF0000);
+                set_register(inst.dest, 
+                    memory.get_halfword(get_register(inst.src) + inst.immediate - 1) | (get_register(inst.dest) & 0xFFFF0000));
             }
             else if((inst.immediate + get_register(inst.src) % 4) == 2) {
-                set_register(inst.dest, static_cast<uint32_t>(memory.get_word(get_register(inst.src) + inst.immediate - 2)) >> 8 | get_register(inst.dest) & 0xFF000000);
+                set_register(inst.dest, 
+                    (static_cast<uint32_t>(memory.get_word(get_register(inst.src) + inst.immediate - 2)) >> 8) | (get_register(inst.dest) & 0xFF000000));
             }
             else if((inst.immediate + get_register(inst.src) % 4) == 3) {
-                set_register(inst.dest, memory.get_word(inst.immediate + get_register(inst.src) - 3));
+                set_register(inst.dest, 
+                    memory.get_word(inst.immediate + get_register(inst.src) - 3));
             }
             advance_pc(4);
             break;
@@ -366,7 +370,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             }
             break;
         case IOpCode::ORI:
-            set_register(inst.dest, get_register(inst.src) | inst.immediate);
+            set_register(inst.dest, get_register(inst.src) | static_cast<Word>(inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::ANDI:
@@ -392,7 +396,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             }
             break;
         case IOpCode::XORI:
-            set_register(inst.dest, get_register(inst.src) ^ inst.immediate);
+            set_register(inst.dest, get_register(inst.src) ^ static_cast<Word>(inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::ADDI:
