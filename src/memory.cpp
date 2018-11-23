@@ -25,28 +25,28 @@ Memory::Memory(
 /**
  * Check if and address is within instruction memory
  */
-bool Memory::is_instruction(Address addr) const {
+bool is_instruction(Address addr) {
     return addr >= instruction_start && addr < (instruction_start+instruction_size);
 }
 
 /**
  * Check if and address is within data memory
  */
-bool Memory::is_data(Address addr) const {
+bool is_data(Address addr) {
     return addr >= data_start && addr < (data_start+data_size);
 }
 
 /**
  * Check if and address is within data memory
  */
-bool Memory::is_getc(Address addr) const {
+bool is_getc(Address addr) {
     return addr >= 0x30000000 && addr < 0x30000004;
 }
 
 /**
  * Check if and address is within data memory
  */
-bool Memory::is_putc(Address addr) const {
+bool is_putc(Address addr) {
     return addr >= 0x30000004 && addr < 0x30000008;
 }
 

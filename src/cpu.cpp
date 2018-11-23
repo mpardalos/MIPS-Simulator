@@ -3,6 +3,7 @@
 #include "cpu.hpp"
 #include "exceptions.hpp"
 #include "opcodes.hpp"
+#include "memory.hpp"
 
 CPU::CPU(std::unique_ptr<std::vector<Word>> instructions) : 
     memory(std::move(instructions)),
@@ -28,35 +29,40 @@ void CPU::advance_pc(Address offset) {
 uint8_t CPU::run() { return run(false); }
 
 uint8_t CPU::run(bool trace) {
-    while (true) {
-        if (PC == 0) break;
-
-        Word inst_bin = memory.get_word(PC);
-        if (inst_bin == 0) {
-            advance_pc(4);
-            continue;
-        }
-
-        Instruction inst = decode(inst_bin);
-        if (trace) cout << show(as_hex(PC)) << ": " << show(inst) << endl;
-        execute_instruction(inst);
-    }
-    return get_register(RegisterId{2}) & 0xFF;
-}
-
-void CPU::execute_instruction(Instruction instruction) {
     try {
-        instruction.match(
-            [&] (R_Instruction       inst) {      execute_r_type(inst); },
-            [&] (I_Instruction       inst) {      execute_i_type(inst); },
-            [&] (J_Instruction       inst) {      execute_j_type(inst); },
-            [&] (REGIMM_Instruction  inst) { execute_REGIMM_type(inst); },
-            [&] (Special_Instruction inst) { execute_Special_type(inst); }
-        );
+        while (true) {
+            // Jump to 0x0 means terminate
+            if (PC == 0) break;
+            // Executing outside of instruction memory is a a memory error
+            if (!is_instruction(PC)) throw MemoryError("Tried to execute address " + show(as_hex(PC)));
+
+            Word inst_bin = memory.get_word(PC);
+
+            // Skip no-ops
+            if (inst_bin == 0) {
+                advance_pc(4);
+                continue;
+            }
+
+            Instruction inst = decode(inst_bin);
+            if (trace) cout << show(as_hex(PC)) << ": " << show(inst) << endl;
+            execute_instruction(inst);
+        }
+        return get_register(RegisterId{2}) & 0xFF;
     } catch (MIPSError &err) {
         cerr << err.error_message << endl;
         std::exit(err.get_error_code());
     };
+}
+
+void CPU::execute_instruction(Instruction instruction) {
+    instruction.match(
+        [&] (R_Instruction       inst) {      execute_r_type(inst); },
+        [&] (I_Instruction       inst) {      execute_i_type(inst); },
+        [&] (J_Instruction       inst) {      execute_j_type(inst); },
+        [&] (REGIMM_Instruction  inst) { execute_REGIMM_type(inst); },
+        [&] (Special_Instruction inst) { execute_Special_type(inst); }
+    );
 }
 
 void CPU::execute_Special_type(Special_Instruction inst) {
