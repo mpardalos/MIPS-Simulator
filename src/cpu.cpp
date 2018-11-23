@@ -82,7 +82,8 @@ void CPU::execute_Special_type(Special_Instruction inst) {
 void CPU::execute_r_type(R_Instruction inst) {
     switch (inst.function) {
         case OpFunction::JALR:
-            set_register(inst.src2, PC);
+            set_register(inst.dest, PC + 8);
+            PC = nPC;
             nPC = get_register(inst.src1);
             break;
         case OpFunction::JR:
