@@ -1,0 +1,4 @@
+author: mp5617
+instruction: jr
+message: Jump to unaligned address (% 4 != 0)
+exit_code: 245
