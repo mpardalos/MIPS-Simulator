@@ -1,0 +1,5 @@
+author: mp5617
+instruction: lhu
+message: LHU upper EOF
+output: 
+exit_code: 10

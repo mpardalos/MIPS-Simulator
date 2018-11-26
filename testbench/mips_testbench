@@ -32,7 +32,15 @@ for testbin in $(find $TESTS_DIR | grep -E *.mips.bin | sort); do
     [ "$expected_exit_code" == "" ] && expected_exit_code=0
 
     # Run binary and capture exit code and output
-    out=$(echo $input | timeout "$TEST_TIMEOUT"s $SIMULATOR $testbin)
+    if [ "$input" == "" ]; then
+        # If the input is none we want to just get an EOF, but echoing an empty
+        # string in bash doesn't give an EOF. So, instead of the "empty"
+        # string, we use /dev/null
+        out=$(cat /dev/null | timeout "$TEST_TIMEOUT"s $SIMULATOR $testbin)
+    else
+        out=$(echo $input | timeout "$TEST_TIMEOUT"s $SIMULATOR $testbin)
+    fi
+
     exit_code=$?
 
     # If the exit code and output match what was expected, the test passes

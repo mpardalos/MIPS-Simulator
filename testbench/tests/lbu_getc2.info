@@ -1,0 +1,4 @@
+author: mp5617
+instruction: lbu
+message: LBU low byte of EOF
+exit_code: 10
