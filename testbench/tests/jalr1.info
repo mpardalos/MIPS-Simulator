@@ -1,0 +1,4 @@
+author: mp5617
+instruction: jalr
+message: Test that jalr jumps
+exit_code: 10
