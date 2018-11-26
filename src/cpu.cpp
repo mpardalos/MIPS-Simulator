@@ -401,10 +401,10 @@ void CPU::execute_i_type(I_Instruction inst) {
             advance_pc(4);
             break;
         case IOpCode::ADDI:
-            if((get_register(inst.src) + inst.immediate >= 0) && (get_register(inst.src) < 0 && inst.immediate < 0)) {
+            if(((get_register(inst.src) + inst.immediate) >= 0) && ((get_register(inst.src) < 0) && (inst.immediate < 0))) {
                 throw ArithmeticError("Overflow");
             }
-            if((get_register(inst.src) > 0 && inst.immediate > 0) && ((get_register(inst.src) + inst.immediate <= 0))) {
+            if(((get_register(inst.src) > 0) && (inst.immediate > 0)) && (((get_register(inst.src) + inst.immediate) <= 0))) {
                 throw ArithmeticError("Overflow");
             }
             set_register(inst.dest, get_register(inst.src) + inst.immediate);
