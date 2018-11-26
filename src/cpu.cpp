@@ -375,7 +375,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             advance_pc(4);
             break;
         case IOpCode::ANDI:
-            set_register(inst.dest, get_register(inst.src) & inst.immediate);
+            set_register(inst.dest, get_register(inst.src) & static_cast<Word>(inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::SLTI:
