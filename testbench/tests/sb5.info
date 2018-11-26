@@ -1,5 +1,0 @@
-author: em2717
-instruction: sb putc
-message: Check putc
-output: A
-exit_code: 0

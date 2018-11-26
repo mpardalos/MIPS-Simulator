@@ -38,6 +38,7 @@ class Memory {
         const std::unique_ptr<std::vector<Word>> data_memory;
 
         void memwrite(Address, std::function<Word(Word current)>);
+        Word memread_word(Address) const;
 
     public:
         Memory(std::unique_ptr<std::vector<Word>> i_instruction_memory);

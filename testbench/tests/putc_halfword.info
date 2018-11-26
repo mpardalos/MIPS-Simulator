@@ -1,0 +1,5 @@
+author: mp5617
+instruction: sh
+message: Putc using halfword
+output: A
+exit_code: 0

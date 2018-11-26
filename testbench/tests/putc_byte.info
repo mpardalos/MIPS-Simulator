@@ -1,0 +1,5 @@
+author: em2717
+instruction: sb
+message: Putc using byte
+output: A
+exit_code: 0

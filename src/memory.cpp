@@ -50,6 +50,45 @@ bool is_putc(Address addr) {
     return addr >= 0x30000004 && addr < 0x30000008;
 }
 
+void Memory::memwrite(Address addr, std::function<Word(Word current)> cb) {
+    Address word_address = addr & (~0b11);
+
+    auto current = memread_word(word_address);
+    write_word(word_address, cb(current));
+}
+
+
+/**
+ * Read the word in which an address is contained
+ **/
+Word Memory::memread_word(Address addr) const {
+    Address word_address = addr & (~0b11);
+
+    if (is_instruction(word_address)) {
+        unsigned int inst_index = (word_address - instruction_start) / 4;
+        if (inst_index >= instruction_memory->size()) {
+            return 0;
+        } else {
+            return instruction_memory->at(inst_index);
+        }
+    } else if (is_data(word_address)) {
+        unsigned int data_index = (word_address - data_start) / 4;
+        if (data_index >= data_memory->size()) {
+            return 0;
+        } else {
+            return data_memory->at(data_index);
+        }
+
+    } else if (is_putc(word_address)) {
+        return 0;
+    } else if (is_getc(word_address)) {
+        return getchar();
+    } else {
+        throw MemoryError("Address " + show(as_hex(word_address)) + " is out of bounds");
+    }
+    
+}
+
 /**
  * Get a word (4 bytes) from memory.
  *
@@ -58,30 +97,13 @@ bool is_putc(Address addr) {
  */
 Word Memory::get_word(Address addr) const {
     DEBUG_PRINT("Reading word " << show(as_hex(addr)));
-    if (addr % 4 != 0) throw MemoryError("Word access must be word-aligned");
+    if (addr % 4 != 0) 
+        throw MemoryError("Word access must be word-aligned");
 
-    if (is_instruction(addr)) {
-        unsigned int inst_index = (addr - instruction_start) / 4;
-        if (inst_index >= instruction_memory->size()) {
-            return 0;
-        } else {
-            return instruction_memory->at(inst_index);
-        }
-    } else if (is_data(addr)) {
-        unsigned int data_index = (addr - data_start) / 4;
-        if (data_index >= data_memory->size()) {
-            return 0;
-        } else {
-            return data_memory->at(data_index);
-        }
-
-    } else if (is_putc(addr)) {
+    if (is_putc(addr)) 
         throw MemoryError("Can't read from putc address");
-    } else if (is_getc(addr)) {
-        return getchar();
-    } else {
-        throw MemoryError("Address " + show(as_hex(addr)) + " is out of bounds");
-    }
+    
+    return memread_word(addr);
 }
 
 /**
@@ -130,13 +152,6 @@ Byte Memory::get_byte(Address addr) const {
     Byte byte = shifted & 0xFF;
 
     return byte;
-}
-
-void Memory::memwrite(Address addr, std::function<Word(Word current)> cb) {
-    Address word_address = addr & (~0b11);
-
-    auto current = get_word(word_address);
-    write_word(word_address, cb(current));
 }
 
 /**
