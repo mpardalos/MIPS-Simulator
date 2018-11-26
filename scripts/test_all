@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+# Usage: test_all testbench simulators_dir
+# Test all executables in simulators_dir using testbench
+# Write the results of each simulator to (simulator)-results.csv
+
+
+testbench=$1
+sims_dir=$2
+
+sims=$(find $sims_dir -maxdepth 1 -type f -executable)
+
+for sim in $sims; do
+    echo "Testing $sim"
+    results_file="$sim-results.csv"
+    stderr_file="$sim-stderr.txt"
+    $testbench $sim >$results_file 2>$stderr_file
+done
