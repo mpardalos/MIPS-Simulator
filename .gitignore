@@ -40,3 +40,6 @@ bin/
 # compiled assembly files
 *.bin
 *.elf
+
+# testing others' simulators
+other_sims/
