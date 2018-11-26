@@ -371,11 +371,11 @@ void CPU::execute_i_type(I_Instruction inst) {
             }
             break;
         case IOpCode::ORI:
-            set_register(inst.dest, get_register(inst.src) | static_cast<Word>(inst.immediate));
+            set_register(inst.dest, get_register(inst.src) | static_cast<uint16_t>(inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::ANDI:
-            set_register(inst.dest, get_register(inst.src) & static_cast<Word>(inst.immediate));
+            set_register(inst.dest, get_register(inst.src) & static_cast<uint16_t>(inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::SLTI:
@@ -388,7 +388,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             }
             break;
         case IOpCode::SLTIU:
-            if((unsigned int) get_register(inst.src) < (unsigned int) inst.immediate) {
+            if((unsigned int) get_register(inst.src) <  static_cast<uint16_t>(inst.immediate)) {
                 set_register(inst.dest, 1);
                 advance_pc(4);
             } else {
@@ -397,7 +397,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             }
             break;
         case IOpCode::XORI:
-            set_register(inst.dest, get_register(inst.src) ^ static_cast<Word>(inst.immediate));
+            set_register(inst.dest, get_register(inst.src) ^ static_cast<uint16_t>(inst.immediate));
             advance_pc(4);
             break;
         case IOpCode::ADDI:

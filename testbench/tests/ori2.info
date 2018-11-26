@@ -1,0 +1,4 @@
+author: mp5617
+instruction: ori
+message: Test ori doesn't sign extend
+exit_code: 15
