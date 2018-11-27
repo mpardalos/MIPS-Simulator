@@ -1,0 +1,4 @@
+author: em2717 
+instruction: sb
+message: Writing to getc should fail
+exit_code: 245

@@ -1,0 +1,4 @@
+author: mp5617
+instruction: sh
+message: Store halfword to getc should fail
+exit_code: 245
