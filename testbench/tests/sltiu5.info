@@ -1,0 +1,4 @@
+author: em2717
+instruction: sltiu	
+message: set less than on signed values 0xFF000 < 0xFF00
+exit_code: 1
