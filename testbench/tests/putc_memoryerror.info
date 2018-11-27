@@ -1,0 +1,4 @@
+author: em2717
+instruction: lhu
+message: loading halfword from putc
+exit_code: 245

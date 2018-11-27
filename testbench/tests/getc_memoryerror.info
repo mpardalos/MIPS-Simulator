@@ -1,0 +1,4 @@
+author: em2717 
+instruction: sw
+message: checks writing to getc
+exit_code: 245
