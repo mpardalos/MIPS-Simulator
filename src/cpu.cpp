@@ -5,7 +5,7 @@
 #include "opcodes.hpp"
 #include "memory.hpp"
 
-CPU::CPU(std::unique_ptr<std::vector<Word>> instructions) : 
+CPU::CPU(std::unique_ptr<std::vector<Word>> instructions) :
     memory(std::move(instructions)),
     registers() {}
 
@@ -164,7 +164,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             if(get_register(inst.src2) != 0) {
                 LO = get_register(inst.src1) / get_register(inst.src2);
                 HI = get_register(inst.src1) % get_register(inst.src2);
-            } 
+            }
             advance_pc(4);
             break;
         case OpFunction::DIVU:
@@ -191,7 +191,7 @@ void CPU::execute_r_type(R_Instruction inst) {
             advance_pc(4);
             break;
         case OpFunction::MULT: {
-            Product product = static_cast<int64_t>(get_register(inst.src1)) * static_cast<int64_t>(get_register(inst.src2));
+            Product product = static_cast<Product>(get_register(inst.src1)) * static_cast<Product>(get_register(inst.src2));
             LO = product & 0xFFFFFFFF;
             HI = (product >> 32) & 0xFFFFFFFF;
             advance_pc(4);
@@ -308,24 +308,24 @@ void CPU::execute_i_type(I_Instruction inst) {
             }
             else if(((inst.immediate + get_register(inst.src)) % 4) == 3) {
                 set_register(inst.dest, ((memory.get_word(inst.immediate + get_register(inst.src) - 3) << 24) | (get_register(inst.dest) & 0x00FFFFFF)));
-            }      
+            }
             advance_pc(4);
             break;
-        case IOpCode::LWR: 
+        case IOpCode::LWR:
             if(((inst.immediate + get_register(inst.src)) % 4) == 0) {
-                set_register(inst.dest, 
+                set_register(inst.dest,
                     (static_cast<uint32_t>(memory.get_word(get_register(inst.src) + inst.immediate)) >> 24) | (get_register(inst.dest) & 0xFFFFFF00));
             }
             else if(((inst.immediate + get_register(inst.src)) % 4) == 1) {
-                set_register(inst.dest, 
+                set_register(inst.dest,
                     (static_cast<uint32_t>(memory.get_word(get_register(inst.src) + inst.immediate - 1)) >> 16) | (get_register(inst.dest) & 0xFFFF0000));
             }
             else if(((inst.immediate + get_register(inst.src)) % 4) == 2) {
-                set_register(inst.dest, 
+                set_register(inst.dest,
                     (static_cast<uint32_t>(memory.get_word(get_register(inst.src) + inst.immediate - 2)) >> 8) | (get_register(inst.dest) & 0xFF000000));
             }
             else if(((inst.immediate + get_register(inst.src)) % 4) == 3) {
-                set_register(inst.dest, 
+                set_register(inst.dest,
                     memory.get_word(inst.immediate + get_register(inst.src) - 3));
             }
             advance_pc(4);
@@ -388,7 +388,7 @@ void CPU::execute_i_type(I_Instruction inst) {
             }
             break;
         case IOpCode::SLTIU:
-            if((unsigned int) get_register(inst.src) <  static_cast<uint16_t>(inst.immediate)) {
+            if((unsigned int) get_register(inst.src) <  static_cast<uint32_t>(static_cast<int32_t>(inst.immediate))) {
                 set_register(inst.dest, 1);
                 advance_pc(4);
             } else {
