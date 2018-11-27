@@ -82,7 +82,7 @@ Word Memory::memread_word(Address addr) const {
     } else if (is_putc(word_address)) {
         return 0;
     } else if (is_getc(word_address)) {
-        return getchar();
+        return 0;
     } else {
         throw MemoryError("Address " + show(as_hex(word_address)) + " is out of bounds");
     }
@@ -102,6 +102,9 @@ Word Memory::get_word(Address addr) const {
 
     if (is_putc(addr)) 
         throw MemoryError("Can't read from putc address");
+    
+    if (is_getc(addr))
+        return getchar();
     
     return memread_word(addr);
 }
