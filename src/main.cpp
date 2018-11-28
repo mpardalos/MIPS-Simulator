@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
         uint8_t exit_code = cpu.run(trace);
         exit(exit_code);
     } else {
-        cerr << "Not enough arguments" << endl;
+        std::exit(-21);
     }
 
     return 0;
