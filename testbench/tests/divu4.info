@@ -1,0 +1,4 @@
+author: em2717
+instruction: divu
+message: -98 % 4 testing hi
+exit_code: 2
