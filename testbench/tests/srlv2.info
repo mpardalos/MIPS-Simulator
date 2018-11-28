@@ -1,5 +1,5 @@
 author: em2717
 instruction: srlv
-message: -20 shifted 2
+message: 20 shifted 2
 output: 
 exit_code: 5

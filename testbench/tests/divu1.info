@@ -1,4 +1,4 @@
 author: em2717
-instruction: div
+instruction: divu
 message: 28 / 4
 exit_code: 7
