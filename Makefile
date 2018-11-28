@@ -56,12 +56,6 @@ testbench: tests $(testbench_script)
 	@ echo "Copying test info files"
 	@ cp -r testbench/tests/*.info $(DIST)/tests
 
-test: testbench simulator $(testbench)
-	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null
-
-pretty_test: testbench simulator $(testbench)
-	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null | column -t -s',|' | scripts/highlight red "Fail" | scripts/highlight green "Pass"
-
 # Assemble MIPS assembly file (.s) into MIPS object file (.o)
 %.mips.o: %.s
 	@ echo "Assembling $@"
@@ -76,6 +70,18 @@ pretty_test: testbench simulator $(testbench)
 %.mips.bin: %.mips.elf
 	@ echo "Extracting instructions to $@"
 	@ $(MIPS_OBJCOPY) -O binary --only-section=.text $< $@
+
+# --------------- Running tests --------------- 
+
+test: testbench simulator
+	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null
+
+pretty_test: testbench simulator
+	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null | column -t -s',|' | scripts/highlight red "Fail" | scripts/highlight green "Pass"
+
+get_fails: testbench simulator
+	@ ! ($(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null | grep Fail) && echo "All good 👍"
+
 
 # --------------- Helpers --------------- 
 
