@@ -1,4 +1,4 @@
 author: em2717
 instruction: lb
-message: load byte correctly
+message: load byte correctly with offset
 exit_code: 191
