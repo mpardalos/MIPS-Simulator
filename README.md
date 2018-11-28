@@ -26,8 +26,3 @@ make clean
 ## Dependencies
 
 * https://github.com/mapbox/variant (In `include/`)
-
-* https://github.com/kepkin/dev-shell-essentials 
-  Not used for assessed code, just for pretty printing with make pretty_test.
-  Only using a modified version of [highlight.sh](https://github.com/kepkin/dev-shell-essentials/blob/master/highlight.sh)
-  in scripts/highlight.

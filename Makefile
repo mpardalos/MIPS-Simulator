@@ -77,11 +77,10 @@ test: testbench simulator
 	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null
 
 pretty_test: testbench simulator
-	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null | column -t -s',|' | scripts/highlight red "Fail" | scripts/highlight green "Pass"
+	$(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null | column -t -s',|' | sed -e "s/Pass/👌/" | sed -e "s/Pass/❌/"  
 
 get_fails: testbench simulator
 	@ ! ($(DIST)/mips_testbench $(DIST)/$(SIMULATOR_BIN_NAME) 2>/dev/null | grep Fail) && echo "All good 👍"
-
 
 # --------------- Helpers --------------- 
 
